@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/r">
+        <file>images/faces.jpg</file>
+    </qresource>
+</RCC>
