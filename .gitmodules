@@ -1,0 +1,9 @@
+[submodule "3rd/opencv"]
+	path = 3rd/opencv
+	url = https://github.com/opencv/opencv.git
+[submodule "3rd/opencv_contrib"]
+	path = 3rd/opencv_contrib
+	url = https://github.com/opencv/opencv_contrib.git
+[submodule "3rd/motion"]
+	path = 3rd/motion
+	url = https://github.com/Motion-Project/motion.git

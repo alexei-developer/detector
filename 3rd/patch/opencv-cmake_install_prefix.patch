@@ -1,0 +1,60 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3ee50ff..555b714 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -324,7 +324,7 @@ if(WIN32 AND CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
+ elseif(ANDROID)
+   set(OpenCV_INSTALL_BINARIES_PREFIX "sdk/native/")
+ else()
+-  set(OpenCV_INSTALL_BINARIES_PREFIX "")
++  set(OpenCV_INSTALL_BINARIES_PREFIX "${CMAKE_INSTALL_PREFIX}/")
+ endif()
+ 
+ if(ANDROID)
+@@ -381,23 +381,23 @@ else()
+     set(OPENCV_JAR_INSTALL_PATH java)
+     set(OPENCV_OTHER_INSTALL_PATH   etc)
+   else()
+-    set(OPENCV_LIB_INSTALL_PATH     lib${LIB_SUFFIX})
+-    set(OPENCV_3P_LIB_INSTALL_PATH  share/OpenCV/3rdparty/${OPENCV_LIB_INSTALL_PATH})
+-    set(OPENCV_SAMPLES_SRC_INSTALL_PATH    share/OpenCV/samples)
+-    set(OPENCV_JAR_INSTALL_PATH share/OpenCV/java)
+-    set(OPENCV_OTHER_INSTALL_PATH   share/OpenCV)
++    set(OPENCV_LIB_INSTALL_PATH     ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
++    set(OPENCV_3P_LIB_INSTALL_PATH  ${CMAKE_INSTALL_PREFIX}/share/OpenCV/3rdparty/${OPENCV_LIB_INSTALL_PATH})
++    set(OPENCV_SAMPLES_SRC_INSTALL_PATH    ${CMAKE_INSTALL_PREFIX}/share/OpenCV/samples)
++    set(OPENCV_JAR_INSTALL_PATH ${CMAKE_INSTALL_PREFIX}/share/OpenCV/java)
++    set(OPENCV_OTHER_INSTALL_PATH   ${CMAKE_INSTALL_PREFIX}/share/OpenCV)
+   endif()
+-  set(OPENCV_INCLUDE_INSTALL_PATH "include")
++  set(OPENCV_INCLUDE_INSTALL_PATH "${CMAKE_INSTALL_PREFIX}/include")
+ 
+   math(EXPR SIZEOF_VOID_P_BITS "8 * ${CMAKE_SIZEOF_VOID_P}")
+   if(LIB_SUFFIX AND NOT SIZEOF_VOID_P_BITS EQUAL LIB_SUFFIX)
+     set(OPENCV_CONFIG_INSTALL_PATH lib${LIB_SUFFIX}/cmake/opencv)
+   else()
+-    set(OPENCV_CONFIG_INSTALL_PATH share/OpenCV)
++    set(OPENCV_CONFIG_INSTALL_PATH ${CMAKE_INSTALL_PREFIX}/share/OpenCV)
+   endif()
+ endif()
+ 
+-set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${OPENCV_LIB_INSTALL_PATH}")
++set(CMAKE_INSTALL_RPATH "${OPENCV_LIB_INSTALL_PATH}")
+ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+ 
+ if(INSTALL_TO_MANGLED_PATHS)
+diff --git a/modules/python/common.cmake b/modules/python/common.cmake
+index 29b8816..8b4afb5 100644
+--- a/modules/python/common.cmake
++++ b/modules/python/common.cmake
+@@ -121,8 +121,8 @@ else()
+   endif()
+   install(TARGETS ${the_module}
+           CONFIGURATIONS Release
+-          RUNTIME DESTINATION python/${__ver}/${OpenCV_ARCH} COMPONENT python
+-          LIBRARY DESTINATION python/${__ver}/${OpenCV_ARCH} COMPONENT python
++          RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/python/${__ver}/${OpenCV_ARCH} COMPONENT python
++          LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/python/${__ver}/${OpenCV_ARCH} COMPONENT python
+           )
+ endif()
+ 

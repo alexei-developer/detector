@@ -1,0 +1,10 @@
+diff --git a/modules/xobjdetect/tools/waldboost_detector/CMakeLists.txt b/modules/xobjdetect/tools/waldboost_detector/CMakeLists.txt
+index 7d2272a..01885a7 100644
+--- a/modules/xobjdetect/tools/waldboost_detector/CMakeLists.txt
++++ b/modules/xobjdetect/tools/waldboost_detector/CMakeLists.txt
+@@ -32,4 +32,4 @@ if(ENABLE_SOLUTION_FOLDERS)
+   set_target_properties(${the_target} PROPERTIES FOLDER "applications")
+ endif()
+ 
+-install(TARGETS ${the_target} OPTIONAL RUNTIME DESTINATION bin COMPONENT main)
++install(TARGETS ${the_target} OPTIONAL RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin COMPONENT main)
