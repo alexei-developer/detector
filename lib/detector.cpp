@@ -126,7 +126,6 @@ void detectFace(Mat& frame)
                 circle( frame, eye_center, radius, Scalar( 255, 0, 255 ), 3, 8, 0 );
             }
         }
-
     }
 }
 
