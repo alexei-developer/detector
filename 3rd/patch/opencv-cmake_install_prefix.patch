@@ -43,6 +43,19 @@ index 3ee50ff..555b714 100644
  set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
  
  if(INSTALL_TO_MANGLED_PATHS)
+diff --git a/cmake/OpenCVVersion.cmake b/cmake/OpenCVVersion.cmake
+index 60ac164..0511b94 100644
+--- a/cmake/OpenCVVersion.cmake
++++ b/cmake/OpenCVVersion.cmake
+@@ -8,7 +8,7 @@ string(REGEX REPLACE ".+CV_VERSION_STATUS[ ]+\"([^\"]*)\".*" "\\1" OPENCV_VERSIO
+ 
+ set(OPENCV_VERSION_PLAIN "${OPENCV_VERSION_MAJOR}.${OPENCV_VERSION_MINOR}.${OPENCV_VERSION_PATCH}")
+ 
+-set(OPENCV_VERSION "${OPENCV_VERSION_PLAIN}${OPENCV_VERSION_STATUS}")
++set(OPENCV_VERSION "${OPENCV_VERSION_PLAIN}${OPENCV_VERSION_STATUS}" PARENT_SCOPE)
+ 
+ set(OPENCV_SOVERSION "${OPENCV_VERSION_MAJOR}.${OPENCV_VERSION_MINOR}")
+ set(OPENCV_LIBVERSION "${OPENCV_VERSION_MAJOR}.${OPENCV_VERSION_MINOR}.${OPENCV_VERSION_PATCH}")
 diff --git a/modules/python/common.cmake b/modules/python/common.cmake
 index 29b8816..8b4afb5 100644
 --- a/modules/python/common.cmake

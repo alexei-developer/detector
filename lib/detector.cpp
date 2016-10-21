@@ -11,7 +11,7 @@
 using namespace cv;
 using namespace std;
 
-const string PATH_CASCADE = OpenCV_INSTALL_PATH "/share/OpenCV";
+const string PATH_CASCADE = OpenCV_PATH "/data/";
 string face_cascade_name = PATH_CASCADE + "/lbpcascades/lbpcascade_frontalface.xml";
 string eyes_cascade_name = PATH_CASCADE + "/haarcascades/haarcascade_eye_tree_eyeglasses.xml";
 CascadeClassifier face_cascade;
