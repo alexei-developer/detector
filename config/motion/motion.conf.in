@@ -767,4 +767,4 @@ quiet on
 # Camera config directory - One for each camera.
 ##############################################################
 #
-camera_dir @CMAKE_INSTALL_PREFIX@/etc/motion/conf.d
+camera_dir @PREFIX@/etc/motion/conf.d

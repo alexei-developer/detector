@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.0)
+cmake_policy(SET CMP0048 NEW)
 
 project(detector VERSION 0.1)
 
@@ -22,27 +23,36 @@ patch_3rd(opencv opencv-cmake_install_prefix.patch)
 patch_3rd(opencv_contrib opencv_contrib-cmake_install_prefix.patch)
 
 
-# Config
-add_custom_target(config ALL
-    WORKING_DIRECTORY
-        ${CMAKE_CURRENT_BINARY_DIR}
-    COMMAND
-        mkdir -p config
-    COMMAND
-        cp -rf ${CMAKE_CURRENT_SOURCE_DIR}/config/* config/
-    COMMAND
-        sed "s#@CMAKE_INSTALL_PREFIX@#${CMAKE_INSTALL_PREFIX}#g" config/motion/motion.conf.in > config/motion/motion.conf
-    COMMAND
-        rm -f config/motion/motion.conf.in
-)
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/config/ DESTINATION ${CMAKE_INSTALL_PREFIX}/etc)
-
-
 # OpenCV
 set(WITH_QT        ON CACHE BOOL "Build with Qt Backend support")
-set(BUILD_EXAMPLES ON CACHE BOOL "Build all examples")
 set(OPENCV_EXTRA_MODULES_PATH "${CMAKE_CURRENT_SOURCE_DIR}/3rd/opencv_contrib/modules")
 add_subdirectory(3rd/opencv)
+
+
+# motion
+add_custom_target(motion ALL
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+
+  # bin
+  COMMAND
+    mkdir -p 3rd
+  COMMAND
+    cp -rf ${CMAKE_CURRENT_SOURCE_DIR}/3rd/motion 3rd/
+  COMMAND
+    cd 3rd/motion/ && autoreconf -fiv && ./configure --prefix=${CMAKE_INSTALL_PREFIX} && make
+
+  # config
+  COMMAND
+      mkdir -p config
+  COMMAND
+      cp -rf ${CMAKE_CURRENT_SOURCE_DIR}/config/* config/
+  COMMAND
+      sed "s#@PREFIX@#${CMAKE_INSTALL_PREFIX}#g" config/motion/motion.conf.in > config/motion/motion.conf
+  COMMAND
+      rm -f config/motion/motion.conf.in
+)
+install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/3rd/motion/motion DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/config/ DESTINATION ${CMAKE_INSTALL_PREFIX}/etc)
 
 
 include_directories(.)
