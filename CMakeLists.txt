@@ -1,7 +1,13 @@
 cmake_minimum_required(VERSION 3.0)
 cmake_policy(SET CMP0048 NEW)
 
-project(detector VERSION 0.1)
+# Get Version
+file(READ version.txt VERSION_TXT)
+string(REPLACE "\n" "" VERSION_TXT ${VERSION_TXT})
+
+
+project(detector VERSION ${VERSION_TXT})
+message(STATUS "Project version: ${PROJECT_VERSION}")
 
 
 # Patch
