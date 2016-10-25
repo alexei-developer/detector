@@ -29,9 +29,7 @@ add_custom_target(motion ALL
 
   # bin
   COMMAND
-    mkdir -p 3rd
-  COMMAND
-    cp -rf ${CMAKE_CURRENT_SOURCE_DIR}/motion 3rd/
+    cp -rf ${CMAKE_CURRENT_SOURCE_DIR}/motion .
   COMMAND
     cd motion && autoreconf -fiv && ./configure --prefix=${CMAKE_INSTALL_PREFIX} && make
 
@@ -39,7 +37,7 @@ add_custom_target(motion ALL
   COMMAND
       mkdir -p config
   COMMAND
-      cp -rf ${CMAKE_CURRENT_SOURCE_DIR}/config/* config/
+      cp -rf ${CMAKE_SOURCE_DIR}/config/* config/
   COMMAND
       sed "s#@PREFIX@#${CMAKE_INSTALL_PREFIX}#g" config/motion/motion.conf.in > config/motion/motion.conf
   COMMAND
@@ -56,11 +54,13 @@ if (DETECTOR_WITH_RPI)
 
       # bin
       COMMAND
-        mkdir -p 3rd
+        rm -rf bcm2835/ || true
       COMMAND
-        cp -rf ${CMAKE_CURRENT_SOURCE_DIR}/bcm2835 3rd/
+        cp -rf ${CMAKE_CURRENT_SOURCE_DIR}/bcm2835 .
       COMMAND
-        cd 3rd/bcm2835/ && ./configure --prefix=${CMAKE_INSTALL_PREFIX} && make
+        cd bcm2835/ && ./configure --prefix=${CMAKE_INSTALL_PREFIX} && make clean && make
     )
-endif()
 
+    set(BCM2835_LIBS "${CMAKE_CURRENT_BINARY_DIR}/bcm2835/src/libbcm2835.a" PARENT_SCOPE)
+    set(BCM2835_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/bcm2835/src/" PARENT_SCOPE)
+endif()
