@@ -17,10 +17,6 @@ string eyes_cascade_name = PATH_CASCADE + "/haarcascades/haarcascade_eye_tree_ey
 CascadeClassifier face_cascade;
 CascadeClassifier eyes_cascade;
 
-bool init();
-
-void video_process();
-void photo_process();
 
 void detectFace(Mat& frame);
 void detectPedestrian(Mat& frame) ;
