@@ -15,7 +15,7 @@ if (DETECTOR_WITH_RPI)
 
     include_directories("${BCM2835_INCLUDE}")
 
-    list(APPEND CURRENT_SRC pin.h pin.cpp)
+    list(APPEND CURRENT_SRC pinled.h pinled.cpp)
     list(APPEND CURRENT_LIBS ${BCM2835_LIBS})
 endif()
 

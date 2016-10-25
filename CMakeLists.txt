@@ -13,9 +13,16 @@ message(STATUS "Project version: ${PROJECT_VERSION}")
 # Options
 option(DETECTOR_WITH_RPI OFF "Support work with gpio on RPi board")
 
+# 3rd
+add_subdirectory(3rd)
+
+if (DETECTOR_WITH_RPI)
+    add_definitions(-DWITH_RPI=1)
+    include_directories("${BCM2835_INCLUDE}")
+endif()
+
 
 include_directories(.)
-add_subdirectory(3rd)
 add_subdirectory(app)
 add_subdirectory(lib)
 
