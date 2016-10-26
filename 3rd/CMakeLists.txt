@@ -43,7 +43,7 @@ add_custom_target(motion ALL
   COMMAND
       rm -f config/motion/motion.conf.in
 )
-install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/3rd/motion/motion DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/motion/motion DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/config/ DESTINATION ${CMAKE_INSTALL_PREFIX}/etc)
 
 
