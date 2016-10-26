@@ -8,7 +8,7 @@ add_definitions(-DVERSION_TXT="${VERSION_TXT}")
 
 
 # Options
-option(DETECTOR_WITH_RPI OFF "Support work with gpio on RPi board")
+option(DETECTOR_WITH_RPI ON "Support work with gpio on RPi board")
 
 
 # 3rd
