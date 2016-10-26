@@ -18,7 +18,9 @@ patch_3rd(opencv_contrib opencv_contrib-cmake_install_prefix.patch)
 
 
 # OpenCV
-set(WITH_QT        ON CACHE BOOL "Build with Qt Backend support")
+set(WITH_QT          ON  CACHE BOOL "Build with Qt Backend support")
+set(BUILD_PERF_TESTS OFF CACHE BOOL "Build performance tests")
+set(BUILD_TESTS      OFF CACHE BOOL "Build accuracy & regression tests")
 set(OPENCV_EXTRA_MODULES_PATH "${CMAKE_CURRENT_SOURCE_DIR}/opencv_contrib/modules")
 add_subdirectory(opencv)
 
