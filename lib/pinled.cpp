@@ -5,9 +5,10 @@
 
 PinLED::PinLED(const int& pin) : pin_(pin)
 {
-  // "Failed BCM2835 init"
   if (!bcm2835_init())
     throw std::exception();
+
+  bcm2835_gpio_fsel(pin_, BCM2835_GPIO_FSEL_OUTP);
 }
 
 

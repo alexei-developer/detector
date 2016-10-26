@@ -1,8 +1,9 @@
 #include <exception>
 #include <iostream>
+#include <thread>
 
 #include <QApplication>
-#include <QDebug>
+#include <QtGlobal>
 
 #include "lib/detector.h"
 #include "lib/pinled.h"
@@ -15,26 +16,35 @@ int main(int argc, char *argv[])
 
   qDebug() << a.arguments();
 
-  if (!init())
-    return 1;
+  const bool pinledon = a.arguments().contains("pinledon");
+  const bool pinledoff = a.arguments().contains("pinledoff");
+  const bool sleepon = a.arguments().contains("sleepon");
 
   try {
-    if (a.arguments().indexOf("pinledon"))
+
+    if (pinledon)
     {
       qInfo() << "Pin led on";
       PinLED pin;
       pin.on();
+      if (sleepon)
+        std::this_thread::sleep_for(std::chrono::seconds(3));
     }
-    if (a.arguments().indexOf("pinledoff"))
+    else if (pinledoff)
     {
       qInfo() << "Pin led off";
       PinLED pin;
       pin.off();
+      if (sleepon)
+        std::this_thread::sleep_for(std::chrono::seconds(3));
     }
     else
     {
+      if (!init())
+        return 1;
       photo_process(PATH_RESOURCES "/images/faces.jpg");
     }
+
   }
   catch (std::exception& e) {
     qCritical() << "Error: " << e.what();
@@ -43,7 +53,6 @@ int main(int argc, char *argv[])
   catch (...) {
     return 2;
   }
-
 
   return 0;
 }
