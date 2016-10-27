@@ -33,6 +33,9 @@ class qInfo
 #endif
 
 
+bool pinled(QStringList arguments);
+
+
 int main(int argc, char *argv[])
 {
   QApplication a(argc, argv);
@@ -42,40 +45,18 @@ int main(int argc, char *argv[])
 
   qDebug() << "Arguments:" << a.arguments();
 
-  const bool pinledon = a.arguments().contains("pinledon");
-  const bool pinledoff = a.arguments().contains("pinledoff");
-  const bool sleepon = a.arguments().contains("sleepon");
 
   try {
 
-#ifdef WITH_RPI
-    if (pinledon)
-    {
-      qInfo() << "Pin led on";
-      PinLED pin;
-      pin.on();
-      if (sleepon)
-        std::this_thread::sleep_for(std::chrono::seconds(3));
-    }
-    else if (pinledoff)
-    {
-      qInfo() << "Pin led off";
-      PinLED pin;
-      pin.off();
-      if (sleepon)
-        std::this_thread::sleep_for(std::chrono::seconds(3));
-    }
-    else
-    {
-#endif
+    // Led
+    if (pinled(a.arguments()))
+      return 0;
 
+    // CV
     if (!init())
       return 1;
-    photo_process(PATH_RESOURCES "/images/faces.jpg");
 
-#ifdef WITH_RPI
-    }
-#endif
+    photo_process(PATH_RESOURCES "/images/faces.jpg");
 
   }
   catch (std::exception& e) {
@@ -87,4 +68,38 @@ int main(int argc, char *argv[])
   }
 
   return 0;
+}
+
+
+bool pinled(QStringList arguments)
+{
+#ifndef WITH_RPI
+  qWarning() << "Not support RPi";
+  return false;
+#else
+  const bool pinledon  = arguments.contains("pinledon");
+  const bool pinledoff = arguments.contains("pinledoff");
+  const bool sleepon   = arguments.contains("sleepon");
+
+  if ( ! (pinledon || pinledoff))
+    return false;
+
+  PinLED pin;
+
+  if (pinledon)
+  {
+    qInfo() << "Pin led on";
+    pin.on();
+  }
+  else if (pinledoff)
+  {
+    qInfo() << "Pin led off";
+    pin.off();
+  }
+
+  if (sleepon)
+    std::this_thread::sleep_for(std::chrono::seconds(3));
+
+  return true;
+#endif
 }
