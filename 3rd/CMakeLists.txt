@@ -51,18 +51,5 @@ install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/config/ DESTINATION ${CMAKE_INSTAL
 
 # bcm2835 (http://www.airspayce.com/mikem/bcm2835/)
 if (DETECTOR_WITH_RPI)
-    add_custom_target(bcm2835 ALL
-      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-
-      # bin
-      COMMAND
-        rm -rf bcm2835 || true
-      COMMAND
-        cp -rf ${CMAKE_CURRENT_SOURCE_DIR}/bcm2835 .
-      COMMAND
-        cd bcm2835/ && ./configure --prefix="${CMAKE_INSTALL_PREFIX}" && make
-    )
-
-    set(BCM2835_LIBS "${CMAKE_CURRENT_BINARY_DIR}/bcm2835/src/libbcm2835.a" PARENT_SCOPE)
-    set(BCM2835_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/bcm2835/src/" PARENT_SCOPE)
+    add_subdirectory(bcm2835)
 endif()

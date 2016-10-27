@@ -16,7 +16,7 @@ if (DETECTOR_WITH_RPI)
     include_directories("${BCM2835_INCLUDE}")
 
     list(APPEND CURRENT_SRC pinled.h pinled.cpp)
-    list(APPEND CURRENT_LIBS ${BCM2835_LIBS})
+    list(APPEND CURRENT_LIBS bcm2835)
 endif()
 
 
@@ -32,7 +32,3 @@ include_directories("${opencv_objdetect_SOURCE_DIR}/include")
 
 add_library(detect STATIC ${CURRENT_SRC})
 target_link_libraries(detect ${CURRENT_LIBS})
-
-if (DETECTOR_WITH_RPI)
-    add_dependencies(detect bcm2835)
-endif()
