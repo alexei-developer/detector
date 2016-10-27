@@ -19,6 +19,8 @@ add_subdirectory(3rd)
 project(detector VERSION ${VERSION_TXT})
 message(STATUS "${PROJECT_NAME} version: ${PROJECT_VERSION}")
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
 if (DETECTOR_WITH_RPI)
     message(STATUS "With RPi support")
     add_definitions(-DWITH_RPI=1)
