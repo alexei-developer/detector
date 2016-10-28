@@ -42,7 +42,6 @@ add_subdirectory(libs)
 
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 set(CPACK_PACKAGE_CONTACT "A.Arkhangelsky <alexei.developer@gmail.com>")
-set(CPACK_GENERATOR "DEB")
 set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
     ${CMAKE_INSTALL_PREFIX}
     ${CMAKE_INSTALL_PREFIX}/bin
@@ -53,4 +52,13 @@ set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
     /usr/lib/python3.5/site-packages
     /usr/lib/python2.7
     /usr/lib/python2.7/site-packages)
+
+if(EXISTS /etc/debian_version)
+    set(CPACK_GENERATOR "DEB")
+elseif(EXISTS /etc/redhat-release)
+    set(CPACK_GENERATOR "RPM")
+else()
+    set(CPACK_GENERATOR "TGZ")
+endif()
+
 include(CPack)
