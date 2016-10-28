@@ -15,7 +15,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 
 
 add_executable(detector main.cpp  resources/resources.qrc)
-target_link_libraries(detector detect Qt5::Widgets)
+target_link_libraries(detector detect Qt5::Widgets core)
 
 install(TARGETS detector DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resources/images
