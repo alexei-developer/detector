@@ -29,9 +29,10 @@ else()
     message(WARNING "Without RPi support")
 endif()
 
-include_directories(.)
-add_subdirectory(app)
-add_subdirectory(lib)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs)
+add_subdirectory(apps)
+add_subdirectory(libs)
 
 
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})

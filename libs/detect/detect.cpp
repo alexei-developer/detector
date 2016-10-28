@@ -1,4 +1,4 @@
-#include "detector.h"
+#include "detect.h"
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
