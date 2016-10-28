@@ -1,3 +1,6 @@
 add_subdirectory(core)
 add_subdirectory(detect)
-add_subdirectory(rpi)
+
+if(DETECTOR_WITH_RPI)
+    add_subdirectory(rpi)
+endif()

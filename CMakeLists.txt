@@ -8,7 +8,12 @@ add_definitions(-DVERSION_TXT="${VERSION_TXT}")
 
 
 # Options
-option(DETECTOR_WITH_RPI "Support work with gpio on RPi board" ON)
+if(NOT DETECTOR_WITH_RPI)
+    if(EXISTS /opt/vc/include/bcm_host.h)
+        set(DETECTOR_WITH_RPI ON CACHE BOOL "Support work with gpio on RPi board")
+    endif()
+endif()
+option(DETECTOR_WITH_RPI "Support work with gpio on RPi board" OFF)
 
 
 # 3rd
@@ -21,7 +26,7 @@ message(STATUS "${PROJECT_NAME} version: ${PROJECT_VERSION}")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-rpath,${CMAKE_INSTALL_PREFIX}/lib -std=c++11")
 
-if (DETECTOR_WITH_RPI)
+if(DETECTOR_WITH_RPI)
     message(STATUS "With RPi support")
     add_definitions(-DWITH_RPI=1)
     include_directories("${BCM2835_INCLUDE}")

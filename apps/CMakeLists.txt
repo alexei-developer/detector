@@ -1,2 +1,5 @@
 add_subdirectory(detector)
-add_subdirectory(pinled)
+
+if(DETECTOR_WITH_RPI)
+    add_subdirectory(pinled)
+endif()
