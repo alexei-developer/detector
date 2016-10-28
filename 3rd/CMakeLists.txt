@@ -39,7 +39,7 @@ add_custom_target(motion ALL
   COMMAND
       mkdir -p config
   COMMAND
-      cp -rf ${CMAKE_SOURCE_DIR}/config/* config/
+      cp -rf ${CMAKE_CURRENT_SOURCE_DIR}/config/* config/
   COMMAND
       sed "s#@PREFIX@#${CMAKE_INSTALL_PREFIX}#g" config/motion/motion.conf.in > config/motion/motion.conf
   COMMAND
