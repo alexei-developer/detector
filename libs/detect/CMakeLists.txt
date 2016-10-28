@@ -1,7 +1,7 @@
 message(STATUS "OpenCV library status:")
 message(STATUS "    version: ${OPENCV_VERSION}")
 
-add_definitions(-DOpenCV_PATH="${OpenCV_SOURCE_DIR}")
+add_definitions(-DOpenCV_PATH="${CMAKE_INSTALL_PREFIX}/share/OpenCV")
 
 include_directories("${opencv_core_SOURCE_DIR}/include")
 include_directories("${opencv_highgui_SOURCE_DIR}/include")

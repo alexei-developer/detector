@@ -1,1 +1,1 @@
-#cmakedefine PATH_RESOURCES "@PATH_RESOURCES@/resources"
+#cmakedefine PATH_RESOURCES "@PATH_RESOURCES@"
