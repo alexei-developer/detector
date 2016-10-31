@@ -22,7 +22,11 @@ int main(int argc, char *argv[])
     if (!init())
       return 1;
 
-    photo_process(PATH_RESOURCES "/images/faces.jpg");
+    DetectFace(PATH_RESOURCES "/images/faces.jpg");
+  }
+  catch (DetectNotFound& e) {
+    LOG_INFO << e.what();
+    return 0;
   }
   catch (std::exception& e) {
     LOG_CRITICAL << "Error: " << e.what();

@@ -8,29 +8,43 @@
 #include <iostream>
 #include <stdio.h>
 
+#include "core/core.h"
+
 
 using namespace cv;
 using namespace std;
 
+const std::string FIND_FILENAME_POSTFIX = "_find";
+
 const string PATH_CASCADE = OpenCV_PATH;
-string face_cascade_name = PATH_CASCADE + "/lbpcascades/lbpcascade_frontalface.xml";
-string eyes_cascade_name = PATH_CASCADE + "/haarcascades/haarcascade_eye_tree_eyeglasses.xml";
+string FACE_CASCADE_NAME = PATH_CASCADE + "/lbpcascades/lbpcascade_frontalface.xml";
+string EYES_CASCADE_NAME = PATH_CASCADE + "/haarcascades/haarcascade_eye_tree_eyeglasses.xml";
 CascadeClassifier face_cascade;
 CascadeClassifier eyes_cascade;
 
 
-void detectFace(Mat& frame);
-void detectPedestrian(Mat& frame) ;
+
+DetectNotFound::DetectNotFound(const string& message) :
+  message_(message)
+{ }
 
 
-bool init() {
-  if( !face_cascade.load( face_cascade_name ) ) {
-    cerr << "Error loading face cascade\n";
+const char* DetectNotFound::what() const throw()
+{
+  return message_.c_str();
+}
+
+
+
+bool init()
+{
+  if (!face_cascade.load(FACE_CASCADE_NAME)) {
+    LOG_CRITICAL << "Error loading face cascade\n";
     return false;
   }
 
-  if( !eyes_cascade.load( eyes_cascade_name ) ){
-    cerr << "Error loading eyes cascade\n";
+  if (!eyes_cascade.load(EYES_CASCADE_NAME)) {
+    LOG_CRITICAL << "Error loading eyes cascade\n";
     return false;
   }
 
@@ -53,7 +67,7 @@ void video_process()
       if(image.empty())
         break;
 
-      detectFace(image);
+      // DetectFace(image);
       //detectPedestrian(image);
       imshow("Sample", image);
       if(waitKey(10) >= 0)
@@ -70,17 +84,7 @@ void video_process()
 }
 
 
-void photo_process(const string& path) {
-
-  Mat image = imread(path);
-  detectFace(image);
-//  namedWindow("Sample", WINDOW_NORMAL);
-//  imshow("Sample", image);
-//  waitKey(0);
-}
-
-
-void drawText(Mat & image)
+void DrawText(Mat & image)
 {
     putText(image, "Hello OpenCV",
             Point(20, 50),
@@ -90,46 +94,63 @@ void drawText(Mat & image)
 }
 
 
-void detectFace(Mat& frame)
-{
-    std::vector<Rect> faces;
-    Mat frame_gray;
+std::string DetectSaveImage(const Mat& image, const std::string& path_image) {
+  const std::string path_save = path_image + "_find";
+  if (!imwrite(path_save, image))
+    throw std::runtime_error("Fail save find elements image");
 
-    cvtColor( frame, frame_gray, COLOR_BGR2GRAY );
-    equalizeHist( frame_gray, frame_gray );
-
-    //-- Detect faces
-    face_cascade.detectMultiScale(frame_gray, faces );
-
-    cout << faces.size() << endl;
-
-    for( size_t i = 0; i < faces.size(); i++ )
-    {
-        Mat faceROI = frame_gray( faces[i] );
-        std::vector<Rect> eyes;
-
-        //-- In each face, detect eyes
-        eyes_cascade.detectMultiScale( faceROI, eyes, 1.1, 2, 0 |CASCADE_SCALE_IMAGE, Size(30, 30) );
-        if( eyes.size() == 2)
-        {
-            //-- Draw the face
-            Point center( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 );
-            ellipse( frame, center, Size( faces[i].width/2, faces[i].height/2 ), 0, 0, 360, Scalar( 255, 0, 0 ), 2, 8, 0 );
-
-            for( size_t j = 0; j < eyes.size(); j++ )
-            { //-- Draw the eyes
-                Point eye_center( faces[i].x + eyes[j].x + eyes[j].width/2, faces[i].y + eyes[j].y + eyes[j].height/2 );
-                int radius = cvRound( (eyes[j].width + eyes[j].height)*0.25 );
-                circle( frame, eye_center, radius, Scalar( 255, 0, 255 ), 3, 8, 0 );
-            }
-        }
-    }
+  return path_save;
 }
 
 
-void detectPedestrian(Mat& frame) {
+
+std::string DetectFace(const std::string& path_image)
+{
+  Mat image = imread(path_image);
+
+  std::vector<Rect> faces;
   Mat frame_gray;
-  cvtColor( frame, frame_gray, COLOR_BGR2GRAY );
+
+  cvtColor(image, frame_gray, COLOR_BGR2GRAY );
+  equalizeHist( frame_gray, frame_gray );
+
+  // Detect faces
+  face_cascade.detectMultiScale(frame_gray, faces );
+
+  if (faces.size() == 0)
+    throw DetectNotFound("Not found faces");
+
+  for( size_t i = 0; i < faces.size(); i++ )
+  {
+    Mat faceROI = frame_gray(faces[i]);
+    std::vector<Rect> eyes;
+
+    // In each face, detect eyes
+    eyes_cascade.detectMultiScale(faceROI, eyes, 1.1, 2, 0 |CASCADE_SCALE_IMAGE, Size(30, 30) );
+    if( eyes.size() == 2)
+    {
+      // Draw the face
+      Point center( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 );
+      ellipse( image, center, Size( faces[i].width/2, faces[i].height/2 ), 0, 0, 360, Scalar( 255, 0, 0 ), 2, 8, 0 );
+
+      for( size_t j = 0; j < eyes.size(); j++ )
+      { // Draw the eyes
+        Point eye_center( faces[i].x + eyes[j].x + eyes[j].width/2, faces[i].y + eyes[j].y + eyes[j].height/2 );
+        int radius = cvRound( (eyes[j].width + eyes[j].height)*0.25 );
+        circle(image, eye_center, radius, Scalar( 255, 0, 255 ), 3, 8, 0 );
+      }
+    }
+  }
+
+  return DetectSaveImage(image, path_image);
+}
+
+
+std::string DetectPedestrian(const string& path_image) {
+  Mat image = imread(path_image);
+
+  Mat frame_gray;
+  cvtColor(image, frame_gray, COLOR_BGR2GRAY);
   equalizeHist( frame_gray, frame_gray );
 
   // параметры HOG-дескриптора и детектора
@@ -142,7 +163,7 @@ void detectPedestrian(Mat& frame) {
 
   // создаем HOG-дескриптор/детектор
   HOGDescriptor hog(winSize, blockSize,
-  blockStride, cellSize, nbins);
+                    blockStride, cellSize, nbins);
 
   // устанавливаем в качестве модели
   // линейную машину опорных векторов,
@@ -157,7 +178,10 @@ void detectPedestrian(Mat& frame) {
   // производим детектирование
   vector<Rect> locations;
   vector<double> weights;
-  hog.detectMultiScale(frame, locations, weights, 0.0, winStride, Size(),  1.05, 2., false);
+  hog.detectMultiScale(frame_gray, locations, weights, 0.0, winStride, Size(),  1.05, 2., false);
+
+  if (locations.size() == 0)
+    throw DetectNotFound("Not found pedestrian");
 
   // отрисовываем срабатывания детектора на изображении
   for (size_t i = 0; i < locations.size(); ++i)
@@ -167,6 +191,8 @@ void detectPedestrian(Mat& frame) {
     detection.y /= 2;
     detection.width /= 2;
     detection.height /= 2;
-    rectangle(frame, detection, Scalar(0, 0, 255), 2);
+    rectangle(image, detection, Scalar(0, 0, 255), 2);
   }
+
+  return DetectSaveImage(image, path_image);
 }
