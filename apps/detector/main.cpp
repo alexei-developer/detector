@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
   LOG_INFO << "Detector version:" << VERSION_TXT;
   LOG_INFO << "Qt version:" << qVersion();
 
-  LOG_DEBUG << "Arguments:" << a.arguments();
+  LOG_DEBUG << "Arguments:" << a.arguments().join(" ").toStdString();
 
   try {
     if (!init())
@@ -33,6 +33,7 @@ int main(int argc, char *argv[])
     return 1;
   }
   catch (...) {
+    LOG_CRITICAL << "Undefined error";
     return 2;
   }
 

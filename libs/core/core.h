@@ -3,31 +3,51 @@
 
 #include <iostream>
 #include <sstream>
-
-#include <QtGlobal>
-#include <QDebug>
+#include <cstring>
 
 
-#if (QT_VERSION < QT_VERSION_CHECK(5,5,0))
-class qInfo
+#define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+
+
+class Log
 {
-    std::stringstream stream;
+  public:
 
-    public:
-        ~qInfo();
+    enum Level {
+      DEBUG,
+      INFO,
+      ERR
+    };
 
-        inline qInfo &operator<<(bool t);
+    Log(const Level& level);
+    ~Log();
 
-        template <typename T>
-        qInfo &operator<<(T t) { stream << t << " "; return *this; }
+    template <typename T> Log &operator<<(T t)
+    {
+      stream_ << t << " "; return *this;
+    }
+
+    inline Log &operator<<(bool t);
+
+
+  private:
+    std::stringstream stream_;
+    Level level_;
 };
-#endif
 
 
-#define LOG_DEBUG    qDebug()
-#define LOG_INFO     qInfo()
-#define LOG_WARNING  qWarning()
-#define LOG_CRITICAL qCritical()
+#define LOG_DEBUG    Log(Log::DEBUG)
+#define LOG_INFO     Log(Log::INFO)
+#define LOG_WARNING  Log(Log::ERR)
+#define LOG_CRITICAL Log(Log::ERR)
 
+
+
+template<typename T>
+std::string ToString(const T& val) {
+  std::stringstream s;
+  s << val;
+  return s.str();
+}
 
 #endif // CORE_H

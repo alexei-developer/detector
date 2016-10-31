@@ -11,6 +11,6 @@ include_directories("${opencv_videoio_SOURCE_DIR}/include")
 include_directories("${opencv_objdetect_SOURCE_DIR}/include")
 
 add_library(detect STATIC detect.cpp detect.h)
-target_link_libraries(detect opencv_core opencv_highgui opencv_imgproc
+target_link_libraries(detect core opencv_core opencv_highgui opencv_imgproc
                              opencv_videoio opencv_objdetect opencv_imgcodecs)
 
