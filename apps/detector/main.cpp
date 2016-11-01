@@ -3,6 +3,7 @@
 #include <thread>
 
 #include <QCoreApplication>
+#include <QStringList>
 
 #include "config.h"
 #include "core/core.h"
