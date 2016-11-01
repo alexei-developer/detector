@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 {
   QCoreApplication a(argc, argv);
 
-  LOG_INFO << "Detector version:" << VERSION_TXT;
+  LOG_INFO << "Detector version:" << DETECTOR_VERSION;
   LOG_INFO << "Qt version:" << qVersion();
 
   LOG_DEBUG << "Arguments:" << a.arguments().join(" ").toStdString();

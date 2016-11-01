@@ -1,3 +1,9 @@
+cmake_minimum_required(VERSION 3.0)
+include(../cmake/detector.cmake)
+
+project(detector_3rdparty VERSION ${DETECTOR_VERSION})
+
+
 # Patch
 macro(patch_3rd name name_patch)
     message(STATUS "Begin patch 3rd: ${name}")
@@ -53,3 +59,27 @@ install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/config/ DESTINATION ${CMAKE_INSTAL
 if (DETECTOR_WITH_RPI)
     add_subdirectory(bcm2835)
 endif()
+
+
+set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+set(CPACK_PACKAGE_CONTACT "A.Arkhangelsky <alexei.developer@gmail.com>")
+set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
+    ${CMAKE_INSTALL_PREFIX}
+    ${CMAKE_INSTALL_PREFIX}/bin
+    ${CMAKE_INSTALL_PREFIX}/lib
+    ${CMAKE_INSTALL_PREFIX}/include
+    ${CMAKE_INSTALL_PREFIX}/share
+    /usr/lib/python3.5
+    /usr/lib/python3.5/site-packages
+    /usr/lib/python2.7
+    /usr/lib/python2.7/site-packages)
+
+if(EXISTS /etc/debian_version)
+    set(CPACK_GENERATOR "DEB")
+elseif(EXISTS /etc/redhat-release)
+    set(CPACK_GENERATOR "RPM")
+else()
+    set(CPACK_GENERATOR "TGZ")
+endif()
+
+include(CPack)

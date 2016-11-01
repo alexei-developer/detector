@@ -13,10 +13,10 @@ int main(int argc, char *argv[])
 {
   QCoreApplication a(argc, argv);
 
-  LOG_INFO << "PinLED version:" << VERSION_TXT;
+  LOG_INFO << "PinLED version:" << DETECTOR_VERSION;
 
   try {
-    LOG_DEBUG << "Arguments:" << a.arguments();
+    LOG_DEBUG << "Arguments:" << a.arguments().join(" ").toStdString();
 
     const bool pinledon  = a.arguments().contains("on");
     const bool pinledoff = a.arguments().contains("off");
