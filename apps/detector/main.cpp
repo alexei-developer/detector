@@ -7,7 +7,8 @@
 
 #include "config.h"
 #include "core/core.h"
-#include "detect/detect.h"
+#include "detect/video.h"
+#include "detect/detectors/detectorface.h"
 
 
 int main(int argc, char *argv[])
@@ -20,16 +21,17 @@ int main(int argc, char *argv[])
   LOG_DEBUG << "Arguments:" << a.arguments().join(" ").toStdString();
 
   try {
-    if (!detect::init())
-      return 1;
+    detect::Video video(0);
 
-    detect::DetectFace(PATH_RESOURCES "/images/faces.jpg");
+    detect::DetectorFace detectorFace;
+    video.AddDetector(&detectorFace);
+
+    video.Start();
+
+    std::cin.get();
+    LOG_INFO << "Finish";
   }
-  catch (detect::DetectNotFound& e) {
-    LOG_INFO << e.what();
-    return 0;
-  }
-  catch (std::exception& e) {
+  catch (const std::exception& e) {
     LOG_CRITICAL << "Error: " << e.what();
     return 1;
   }

@@ -11,6 +11,12 @@
 
 #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
+#ifdef NDEBUG
+#define LOG_PREFIX ""
+#else
+#define LOG_PREFIX "(" << __FILENAME__ << " | " << __FUNCTION__ << " | " << __LINE__ << ") "
+#endif
+
 namespace developer {
 
   class Log
@@ -40,10 +46,11 @@ namespace developer {
   };
 
 
-  #define LOG_DEBUG    developer::Log(developer::Log::DEBUG)
-  #define LOG_INFO     developer::Log(developer::Log::INFO)
-  #define LOG_WARNING  developer::Log(developer::Log::ERR)
-  #define LOG_CRITICAL developer::Log(developer::Log::ERR)
+  #define LOG_DEBUG    developer::Log(developer::Log::DEBUG) << LOG_PREFIX
+  #define LOG_INFO     developer::Log(developer::Log::INFO)  << LOG_PREFIX
+  #define LOG_WARNING  developer::Log(developer::Log::ERR)   << LOG_PREFIX
+  #define LOG_ERROR    developer::Log(developer::Log::ERR)   << LOG_PREFIX
+  #define LOG_CRITICAL developer::Log(developer::Log::ERR)   << LOG_PREFIX
 
 
 
