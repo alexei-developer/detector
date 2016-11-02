@@ -20,12 +20,12 @@ int main(int argc, char *argv[])
   LOG_DEBUG << "Arguments:" << a.arguments().join(" ").toStdString();
 
   try {
-    if (!init())
+    if (!detect::init())
       return 1;
 
-    DetectFace(PATH_RESOURCES "/images/faces.jpg");
+    detect::DetectFace(PATH_RESOURCES "/images/faces.jpg");
   }
-  catch (DetectNotFound& e) {
+  catch (detect::DetectNotFound& e) {
     LOG_INFO << e.what();
     return 0;
   }

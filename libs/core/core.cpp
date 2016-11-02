@@ -1,5 +1,7 @@
 #include "core.h"
 
+using namespace developer;
+
 #ifdef NDEBUG
 #define LOG_PREFIX ""
 #else
