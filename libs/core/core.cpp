@@ -33,5 +33,6 @@ Log::~Log()
 
 Log& Log::operator<<(bool t)
 {
-  stream_ << (t ? "True" : "False") << " "; return *this;
+  stream_ << (t ? "True" : "False") << " ";
+  return *this;
 }

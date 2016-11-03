@@ -20,16 +20,14 @@ int main(int argc, char *argv[])
 
   LOG_DEBUG << "Arguments:" << a.arguments().join(" ").toStdString();
 
+  detect::DetectorFace detectorFace;
   try {
     detect::Video video(0);
-
-    detect::DetectorFace detectorFace;
     video.AddDetector(&detectorFace);
-
     video.Start();
 
+    LOG_INFO << "Press <enter> key for finish...";
     std::cin.get();
-    LOG_INFO << "Finish";
   }
   catch (const std::exception& e) {
     LOG_CRITICAL << "Error: " << e.what();

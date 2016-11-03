@@ -2,7 +2,7 @@
 #define IOBSERVER_H
 
 #include <thread>
-#include <atomic>
+#include <future>
 
 #include <opencv2/core.hpp>
 
@@ -13,18 +13,22 @@ namespace detect {
   {
     public:
       IObserver(const std::string& name);
+      virtual ~IObserver();
+
       void NewFrame(const cv::Mat& frame);
+      std::string Name() const;
 
     protected:
       virtual std::vector<cv::Rect> Detect(const cv::Mat& frame) = 0;
 
     private:
       const std::string name_;
-      std::thread work_;
-      std::atomic_bool is_busy_ {false};
+      std::future<bool> work_result_;
+      cv::Mat frame_;
 
-      void Start(const cv::Mat& frame);
+      bool Start();
   };
+
 }
 
 #endif // IOBSERVER_H

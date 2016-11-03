@@ -32,12 +32,12 @@ namespace developer {
       Log(const Level& level);
       ~Log();
 
-      template <typename T> Log &operator<<(T t)
+      template <typename T> Log& operator<<(T t)
       {
         stream_ << t << " "; return *this;
       }
 
-      inline Log &operator<<(bool t);
+      inline Log& operator<<(bool t);
 
 
     private:

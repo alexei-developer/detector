@@ -58,12 +58,14 @@ bool detect::Video::Stop()
 
 void detect::Video::AddDetector(IObserver* observer)
 {
+  LOG_INFO << "Add detector: " << observer->Name();
   observers_.push_back(observer);
 }
 
 
 void detect::Video::Capture()
 {
+  LOG_INFO << "Start capture";
   cv::Mat frame;
 
   while (!flag_stop_)
@@ -71,6 +73,8 @@ void detect::Video::Capture()
     video_ >> frame;
     if(frame.empty())
       throw std::runtime_error("Can not read frame");
+
+    LOG_INFO << "Good read frame";
 
     for (IObserver* observer : observers_)
       observer->NewFrame(frame);
@@ -82,5 +86,5 @@ void detect::Video::Capture()
 //        break;
   }
 
-  LOG_INFO << "Stop video surveliance";
+  LOG_INFO << "Stop capture";
 }
