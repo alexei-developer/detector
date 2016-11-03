@@ -13,11 +13,6 @@ namespace detect {
       const std::string message_;
   };
 
-  bool init();
-
-  void video_process(const std::string& url);
-  void video_process(const int& device);
-
   std::string DetectFace(const std::string& path_image);
   std::string DetectPedestrian(const std::string& path_image);
 

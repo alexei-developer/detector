@@ -8,7 +8,11 @@ set(CMAKE_AUTORCC ON)
 
 find_package(Qt5Core REQUIRED)
 
-add_executable(detector main.cpp  resources/resources.qrc)
+add_executable(detector
+  main.cpp
+  detectorapplication.h detectorapplication.cpp
+  detector.h detector.cpp
+  resources/resources.qrc)
 target_link_libraries(detector detect core Qt5::Core)
 
 install(TARGETS detector DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)

@@ -74,16 +74,8 @@ void detect::Video::Capture()
     if(frame.empty())
       throw std::runtime_error("Can not read frame");
 
-    LOG_INFO << "Good read frame";
-
     for (IObserver* observer : observers_)
       observer->NewFrame(frame);
-
-//      DetectFace(image);
-//      detectPedestrian(image);
-//      cv::imshow("Sample", image);
-//      if(cv::waitKey(10) >= 0)
-//        break;
   }
 
   LOG_INFO << "Stop capture";

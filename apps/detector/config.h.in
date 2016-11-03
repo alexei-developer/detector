@@ -1,1 +1,9 @@
 #cmakedefine PATH_RESOURCES "@PATH_RESOURCES@"
+
+struct EXIT_CODE {
+  enum EXIT_CODES {
+    OK = 0,
+    ERR = 1,
+    UNKNOW_ERR = 2
+  };
+};

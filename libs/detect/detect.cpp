@@ -24,14 +24,6 @@ const char* detect::DetectNotFound::what() const throw()
 }
 
 
-
-bool detect::init()
-{
-
-  return true;
-}
-
-
 void DrawText(cv::Mat& image)
 {
     putText(image, "Hello OpenCV",
