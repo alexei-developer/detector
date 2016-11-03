@@ -8,6 +8,9 @@ const std::string PATH_CASCADE = OpenCV_PATH;
 std::string FACE_CASCADE_NAME = PATH_CASCADE + "/lbpcascades/lbpcascade_frontalface.xml";
 std::string EYES_CASCADE_NAME = PATH_CASCADE + "/haarcascades/haarcascade_eye_tree_eyeglasses.xml";
 
+cv::CascadeClassifier face_cascade;
+cv::CascadeClassifier eyes_cascade;
+
 
 detect::DetectorFace::DetectorFace() :
   IObserver("Face")

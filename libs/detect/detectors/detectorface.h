@@ -14,10 +14,6 @@ namespace detect {
       DetectorFace();
       std::vector<cv::Rect> Detect(const cv::Mat &frame);
       std::string Name();
-
-    private:
-      cv::CascadeClassifier face_cascade;
-      cv::CascadeClassifier eyes_cascade;
   };
 
 }
