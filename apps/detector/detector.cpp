@@ -13,9 +13,9 @@ Detector::Detector(const QString& url)
     int device = url.toInt(&is_device);
 
     if (is_device)
-      video = std::make_shared<detect::Video>(device);
+      video = std::make_shared<detect::VideoCapture>(device);
     else
-      video = std::make_shared<detect::Video>(url.toStdString());
+      video = std::make_shared<detect::VideoCapture>(url.toStdString());
 
     video->AddDetector(&detectorFace);
   }

@@ -13,7 +13,7 @@ cv::CascadeClassifier eyes_cascade;
 
 
 detect::DetectorFace::DetectorFace() :
-  IObserver("Face")
+  IDetector("Face")
 {
   if (!face_cascade.load(FACE_CASCADE_NAME))
     throw std::runtime_error("Error loading face cascade");
@@ -56,6 +56,5 @@ std::vector<cv::Rect> detect::DetectorFace::Detect(const cv::Mat& frame)
 //    }
 //  }
 
-  LOG_DEBUG << "Faces count: " << faces.size();
   return faces;
 }

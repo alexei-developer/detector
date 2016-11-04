@@ -15,7 +15,7 @@ class Detector
 
   private:
     detect::DetectorFace detectorFace;
-    std::shared_ptr<detect::Video> video;
+    std::shared_ptr<detect::VideoCapture> video;
 };
 
 #endif // DETECTOR_H

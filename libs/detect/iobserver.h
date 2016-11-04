@@ -4,16 +4,22 @@
 #include <thread>
 #include <future>
 
+#include <QObject>
 #include <opencv2/core.hpp>
 
 
 namespace detect {
 
-  class IObserver
+  /**
+   * @brief The IObserver is observer pattern for find specify object
+   */
+  class IDetector : public QObject
   {
+      Q_OBJECT
+
     public:
-      IObserver(const std::string& name);
-      virtual ~IObserver();
+      IDetector(const std::string& name, QObject* parent = 0);
+      virtual ~IDetector();
 
       void NewFrame(const cv::Mat& frame);
       std::string Name() const;
@@ -27,6 +33,11 @@ namespace detect {
       cv::Mat frame_;
 
       bool Start();
+
+    signals:
+
+      void signalFind(const IDetector* detector);
+      void signalLose(const IDetector* detector);
   };
 
 }

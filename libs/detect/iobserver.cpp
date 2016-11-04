@@ -3,19 +3,18 @@
 #include "iobserver.h"
 
 
-detect::IObserver::IObserver(const std::string& name) :
-  name_(name)
-{
-}
+detect::IDetector::IDetector(const std::string& name, QObject* parent) :
+  name_(name), QObject(parent)
+{ }
 
 
-detect::IObserver::~IObserver()
+detect::IDetector::~IDetector()
 {
   work_result_.wait();
 }
 
 
-void detect::IObserver::NewFrame(const cv::Mat& frame)
+void detect::IDetector::NewFrame(const cv::Mat& frame)
 {
   // Check previous work thread is finish job
   if (work_result_.valid()) {
@@ -24,33 +23,34 @@ void detect::IObserver::NewFrame(const cv::Mat& frame)
       return;
   }
 
-  LOG_INFO << "Get new frame for detect: " << name_;
-
   frame_ = frame;
-  work_result_ = std::async(std::launch::async, &IObserver::Start, this);
+  work_result_ = std::async(std::launch::async, &IDetector::Start, this);
 }
 
 
-std::string detect::IObserver::Name() const
+std::string detect::IDetector::Name() const
 {
   return name_;
 }
 
 
-bool detect::IObserver::Start()
+bool detect::IDetector::Start()
 {
-  LOG_DEBUG << "Begin find: " << name_;
-
   try
   {
     std::vector<cv::Rect> rects_find = Detect(frame_);
-    LOG_INFO << name_ << " find count: " << rects_find.size();
+    if (rects_find.size() > 0) {
+      LOG_INFO << name_ << " find count: " << rects_find.size();
+      emit signalFind(this);
+    }
+    else {
+      emit signalLose(this);
+    }
   }
   catch (std::exception& e) {
     LOG_CRITICAL << e.what();
     return false;
   }
 
-  LOG_DEBUG << "End find: " << name_;
   return true;
 }

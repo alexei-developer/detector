@@ -8,7 +8,7 @@
 
 namespace detect {
 
-  class DetectorFace : public IObserver
+  class DetectorFace : public IDetector
   {
     public:
       DetectorFace();

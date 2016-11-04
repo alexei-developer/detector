@@ -1,9 +1,9 @@
-#include "core/core.h"
-
 #include "video.h"
+#include "core/core.h"
+#include "videowriter.h"
 
 
-detect::Video::Video(const std::string& url)
+detect::VideoCapture::VideoCapture(const std::string& url)
 {
   LOG_DEBUG << "Set IP device";
   if (!video_.open(url))
@@ -11,7 +11,7 @@ detect::Video::Video(const std::string& url)
 }
 
 
-detect::Video::Video(const int& usb_device)
+detect::VideoCapture::VideoCapture(const int& usb_device)
 {
   LOG_DEBUG << "Set usb device";
   if (!video_.open(usb_device))
@@ -19,14 +19,14 @@ detect::Video::Video(const int& usb_device)
 }
 
 
-detect::Video::~Video()
+detect::VideoCapture::~VideoCapture()
 {
   Stop();
   work_.join();
 }
 
 
-bool detect::Video::Start()
+bool detect::VideoCapture::Start()
 {
   try {
     LOG_INFO << "Start video surveliance...";
@@ -37,7 +37,7 @@ bool detect::Video::Start()
       return false;
     }
 
-    work_ = std::thread(&Video::Capture, this);
+    work_ = std::thread(&VideoCapture::Capture, this);
   }
   catch (std::exception& e) {
     LOG_CRITICAL << "Error: " << e.what();
@@ -49,22 +49,26 @@ bool detect::Video::Start()
 }
 
 
-bool detect::Video::Stop()
+bool detect::VideoCapture::Stop()
 {
   LOG_INFO << "Request for stop video surveliance";
   flag_stop_ = true;
 }
 
 
-void detect::Video::AddDetector(IObserver* observer)
+void detect::VideoCapture::AddDetector(IDetector* observer)
 {
   LOG_INFO << "Add detector: " << observer->Name();
   observers_.push_back(observer);
 }
 
 
-void detect::Video::Capture()
+void detect::VideoCapture::Capture()
 {
+  const int frame_width  =   video_.get(CV_CAP_PROP_FRAME_WIDTH);
+  const int frame_height =   video_.get(CV_CAP_PROP_FRAME_HEIGHT);
+  VideoWriter writer("/tmp", frame_width, frame_height, observers_);
+
   LOG_INFO << "Start capture";
   cv::Mat frame;
 
@@ -74,8 +78,10 @@ void detect::Video::Capture()
     if(frame.empty())
       throw std::runtime_error("Can not read frame");
 
-    for (IObserver* observer : observers_)
+    for (IDetector* observer : observers_)
       observer->NewFrame(frame);
+
+    writer.Write(frame);
   }
 
   LOG_INFO << "Stop capture";

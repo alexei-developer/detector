@@ -12,23 +12,23 @@
 
 namespace detect {
 
-  class Video
+  class VideoCapture
   {
     public:
-      Video(const std::string& url);
-      Video(const int& usb_device);
-      ~Video();
+      VideoCapture(const std::string& url);
+      VideoCapture(const int& usb_device);
+      ~VideoCapture();
 
       bool Start();
       bool Stop();
 
-      void AddDetector(IObserver* observer);
+      void AddDetector(IDetector* observer);
 
     private:
       cv::VideoCapture video_;
       std::thread work_;
       std::atomic_bool flag_stop_ {false};
-      std::vector<IObserver*> observers_;
+      std::vector<IDetector*> observers_;
 
       void Capture();
   };
