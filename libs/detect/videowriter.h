@@ -63,6 +63,11 @@ namespace detect {
 
       DataList data_list_;
 
+      std::atomic_int write_after_left_ {0};
+
+      bool Begin();
+      bool End();
+
     public slots:
       void slotFind(const IDetector* detector, const std::vector<cv::Rect> rectangles);
       void slotLose(const IDetector* detector);

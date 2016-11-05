@@ -90,6 +90,7 @@ bool DataList::Update(const IDetector* detector, const std::vector<cv::Rect> rec
 
 const int ERR = -1;
 const std::string FILENAME = "detector";
+const int WRITE_AFTER = 125; // 5 seconds
 
 
 VideoWriter::VideoWriter(const std::string& path_file,
@@ -111,40 +112,70 @@ VideoWriter::VideoWriter(const std::string& path_file,
 
 void VideoWriter::Write(const cv::Mat& frame)
 {
-  if (data_list_.Size() == 0)
+  static int count_files = 0;
+
+  // Write running
+  std::lock_guard<std::mutex> lock(mutex_write_);
+  if (!video_writer_) {
+    if (Begin()) {
+      ++count_files;
+
+      LOG_INFO << "Begin write: " << count_files;
+      video_writer_.reset(
+            new cv::VideoWriter(path_file_ + "/" + FILENAME + std::to_string(count_files) + ".avi",
+                         CV_FOURCC('M','J','P','G'),
+                         25,
+                         cv::Size(width_, height_))
+            );
+    }
+    return;
+  }
+
+
+  if (End()) {
+    LOG_INFO << "End write: " << count_files;
+    video_writer_.reset();
+    return;
+  }
+
+  if (!video_writer_->isOpened())
     return;
 
+  // Write to file
   cv::Mat frame_with_rects = frame;
   for(const cv::Rect& rect : data_list_.GetRectangles())
     cv::rectangle(frame_with_rects, rect, cv::Scalar(0, 0, 255));
 
-  std::lock_guard<std::mutex> lock(mutex_write_);
-  if (video_writer_)
-    if (video_writer_->isOpened()) {
-      LOG_INFO << "WRITE";
-      video_writer_->write(frame_with_rects);
-    }
+  video_writer_->write(frame_with_rects);
+}
+
+
+bool VideoWriter::Begin()
+{
+  return (!video_writer_ && data_list_.Size() == 1);
+}
+
+
+bool VideoWriter::End()
+{
+  if (write_after_left_ > 0) {
+    --write_after_left_;
+    return false;
+  }
+
+  if (data_list_.Size() != 0)
+    return false;
+
+  return true;
 }
 
 
 void VideoWriter::slotFind(const IDetector* detector, const std::vector<cv::Rect> rectangles)
 {
+  write_after_left_ = WRITE_AFTER;
+
   if ( ! data_list_.Add(detector, rectangles))
     return;
-
-  if (data_list_.Size() == 1) {
-    static int count_files = 0;
-    LOG_INFO << "Begin write: " << count_files;
-
-    std::lock_guard<std::mutex> lock(mutex_write_);
-
-    video_writer_.reset(
-          new cv::VideoWriter(path_file_ + "/" + FILENAME + std::to_string(++count_files) + ".avi",
-                       CV_FOURCC('M','J','P','G'),
-                       25,
-                       cv::Size(width_, height_))
-          );
-  }
 }
 
 
@@ -154,10 +185,4 @@ void VideoWriter::slotLose(const IDetector* detector)
     return;
 
   data_list_.Delete(detector);
-
-  if (data_list_.Size() == 0) {
-    LOG_INFO << "End write";
-    std::lock_guard<std::mutex> lock(mutex_write_);
-    video_writer_.reset();
-  }
 }
