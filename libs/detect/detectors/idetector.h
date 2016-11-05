@@ -36,7 +36,7 @@ namespace detect {
 
     signals:
 
-      void signalFind(const IDetector* detector);
+      void signalFind(const IDetector* detector, const std::vector<cv::Rect> rectangles);
       void signalLose(const IDetector* detector);
   };
 

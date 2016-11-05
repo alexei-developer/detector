@@ -26,7 +26,7 @@ const char* detect::DetectNotFound::what() const throw()
 
 void DrawText(cv::Mat& image)
 {
-    putText(image, "Hello OpenCV",
+    cv::putText(image, "Hello OpenCV",
             cv::Point(20, 50),
             cv::FONT_HERSHEY_COMPLEX, 1, // font face and scale
             cv::Scalar(255, 255, 255), // white
@@ -88,7 +88,7 @@ std::string detect::DetectPedestrian(const std::string& path_image) {
     detection.y /= 2;
     detection.width /= 2;
     detection.height /= 2;
-    rectangle(image, detection, cv::Scalar(0, 0, 255), 2);
+    cv::rectangle(image, detection, cv::Scalar(0, 0, 255), 2);
   }
 
   return DetectSaveImage(image, path_image);

@@ -41,7 +41,7 @@ bool detect::IDetector::Start()
     std::vector<cv::Rect> rects_find = Detect(frame_);
     if (rects_find.size() > 0) {
       LOG_INFO << name_ << " find count: " << rects_find.size();
-      emit signalFind(this);
+      emit signalFind(this, rects_find);
     }
     else {
       emit signalLose(this);

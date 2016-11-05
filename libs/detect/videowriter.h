@@ -14,6 +14,30 @@
 
 namespace detect {
 
+  struct Data {
+      const IDetector* detector;
+      std::vector<cv::Rect> rectangles;
+
+      bool operator==(const Data& other);
+  };
+
+
+  class DataList {
+
+    public:
+      bool Add(const IDetector* detector, const std::vector<cv::Rect> rectangles);
+      bool Delete(const IDetector* detector);
+      bool IsPresent(const IDetector* detector) const;
+      const int Size() const;
+
+      const std::vector<cv::Rect> GetRectangles() const;
+
+    private:
+      std::list<Data> data_;
+      bool Update(const IDetector* detector, const std::vector<cv::Rect> rectangles);
+  };
+
+
   /**
    * @brief VideoWriter write video for if find object
    */
@@ -37,11 +61,10 @@ namespace detect {
       std::mutex mutex_write_;
       std::unique_ptr<cv::VideoWriter> video_writer_;
 
-      std::list<const IDetector*> detectors_;
-      bool IsPresent(const IDetector* detector) const;
+      DataList data_list_;
 
     public slots:
-      void slotFind(const IDetector* detector);
+      void slotFind(const IDetector* detector, const std::vector<cv::Rect> rectangles);
       void slotLose(const IDetector* detector);
   };
 
