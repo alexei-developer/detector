@@ -5,7 +5,7 @@
 
 #include "detect/video.h"
 #include "detect/detectors/detectorface.h"
-
+#include "detect/detectors/detectormotion.h"
 
 class Detector
 {
@@ -15,6 +15,8 @@ class Detector
 
   private:
     detect::DetectorFace detectorFace;
+    detect::DetectorMotion detectorMotion;
+
     std::shared_ptr<detect::VideoCapture> video;
 };
 

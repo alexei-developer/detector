@@ -13,7 +13,6 @@ namespace detect {
     public:
       DetectorFace();
       std::vector<cv::Rect> Detect(const cv::Mat &frame);
-      std::string Name();
   };
 
 }

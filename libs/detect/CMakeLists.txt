@@ -25,7 +25,9 @@ add_library(detect STATIC
   detectors/idetector.h
   detectors/idetector.cpp
   detectors/detectorface.h
-  detectors/detectorface.cpp)
+  detectors/detectorface.cpp
+  detectors/detectormotion.h
+  detectors/detectormotion.cpp)
 
 target_link_libraries(detect
   core pthread

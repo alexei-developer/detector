@@ -6,7 +6,8 @@
 #include "detect/detectors/detectorface.h"
 
 
-Detector::Detector(const QString& url)
+Detector::Detector(const QString& url) :
+  detectorMotion(0.1)
 {
   try {
     bool is_device = false;
@@ -17,7 +18,7 @@ Detector::Detector(const QString& url)
     else
       video = std::make_shared<detect::VideoCapture>(url.toStdString());
 
-    video->AddDetector(&detectorFace);
+    video->AddDetector(&detectorMotion);
   }
   catch (const std::exception& e) {
     LOG_CRITICAL << "Error: " << e.what();
