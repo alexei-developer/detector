@@ -7,7 +7,7 @@
 
 #include <opencv2/videoio.hpp>
 
-#include "iobserver.h"
+#include "detectors/idetector.h"
 
 
 namespace detect {

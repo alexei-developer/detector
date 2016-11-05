@@ -3,7 +3,7 @@
 
 #include <opencv2/objdetect.hpp>
 
-#include "detect/iobserver.h"
+#include "detect/detectors/idetector.h"
 
 
 namespace detect {

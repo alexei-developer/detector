@@ -22,7 +22,8 @@ add_library(detect STATIC
   detect.h detect.cpp
   video.h video.cpp
   videowriter.h videowriter.cpp
-  iobserver.h iobserver.cpp
+  detectors/idetector.h
+  detectors/idetector.cpp
   detectors/detectorface.h
   detectors/detectorface.cpp)
 

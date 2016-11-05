@@ -1,6 +1,6 @@
 #include "core/core.h"
 
-#include "iobserver.h"
+#include "detectors/idetector.h"
 
 
 detect::IDetector::IDetector(const std::string& name, QObject* parent) :

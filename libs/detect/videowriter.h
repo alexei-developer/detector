@@ -9,7 +9,7 @@
 #include <QObject>
 #include <opencv2/opencv.hpp>
 
-#include "iobserver.h"
+#include "detectors/idetector.h"
 
 
 namespace detect {
