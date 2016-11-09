@@ -69,6 +69,9 @@ void detect::VideoCapture::SetWriter(std::shared_ptr<detect::VideoWriter> writer
         video_.get(CV_CAP_PROP_FRAME_WIDTH),
         video_.get(CV_CAP_PROP_FRAME_HEIGHT)
         );
+  writer_->SetFps(
+        video_.get(CV_CAP_PROP_FPS)
+        );
 }
 
 

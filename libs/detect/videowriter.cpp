@@ -129,7 +129,7 @@ bool VideoWriter::Start(const cv::Mat frame)
       video_writer_.reset(
             new cv::VideoWriter(path_file_ + "/" + FILENAME + std::to_string(count_files) + ".avi",
                          CV_FOURCC('M','J','P','G'),
-                         25,
+                         fps_,
                          cv::Size(width_, height_))
             );
     }
@@ -160,6 +160,15 @@ void VideoWriter::SetSize(const int& width, const int& height)
 {
   width_  = width;
   height_ = height;
+
+  LOG_INFO << "Video write size: " << width_ << "x" << height_;
+}
+
+
+void VideoWriter::SetFps(const int& fps)
+{
+  fps_ = fps;
+  LOG_INFO << "Video write fps: " << fps_;
 }
 
 

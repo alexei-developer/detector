@@ -52,11 +52,13 @@ namespace detect {
                            QObject* parent = 0);
       bool Start(const cv::Mat frame);
       void SetSize(const int& width, const int& height);
+      void SetFps(const int& fps);
 
     private:
       std::string path_file_;
       int width_ {0};
       int height_ {0};
+      int fps_ = {0};
 
       std::mutex mutex_write_;
       std::unique_ptr<cv::VideoWriter> video_writer_;
