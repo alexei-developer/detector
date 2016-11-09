@@ -110,7 +110,7 @@ VideoWriter::VideoWriter(const std::string& path_file,
 }
 
 
-void VideoWriter::Write(const cv::Mat& frame)
+bool VideoWriter::Start(const cv::Mat frame)
 {
   static int count_files = 0;
 
@@ -128,18 +128,18 @@ void VideoWriter::Write(const cv::Mat& frame)
                          cv::Size(width_, height_))
             );
     }
-    return;
+    return false;
   }
 
 
   if (End()) {
     LOG_INFO << "End write: " << count_files;
     video_writer_.reset();
-    return;
+    return false;
   }
 
   if (!video_writer_->isOpened())
-    return;
+    return false;
 
   // Write to file
   cv::Mat frame_with_rects = frame;
@@ -147,6 +147,7 @@ void VideoWriter::Write(const cv::Mat& frame)
     cv::rectangle(frame_with_rects, rect, cv::Scalar(0, 0, 255));
 
   video_writer_->write(frame_with_rects);
+  return true;
 }
 
 

@@ -3,42 +3,25 @@
 #include "detectors/idetector.h"
 
 
-detect::IDetector::IDetector(const std::string& name, QObject* parent) :
-  name_(name), QObject(parent)
+using namespace detect;
+
+
+IDetector::IDetector(const std::string& name, QObject* parent) :
+  QObject(parent), NewFrameThread(), name_(name)
 { }
 
 
-detect::IDetector::~IDetector()
-{
-  work_result_.wait();
-}
-
-
-void detect::IDetector::NewFrame(const cv::Mat& frame)
-{
-  // Check previous work thread is finish job
-  if (work_result_.valid()) {
-    auto status = work_result_.wait_for(std::chrono::milliseconds(0));
-    if (status != std::future_status::ready)
-      return;
-  }
-
-  frame_ = frame;
-  work_result_ = std::async(std::launch::async, &IDetector::Start, this);
-}
-
-
-std::string detect::IDetector::Name() const
+std::string IDetector::Name() const
 {
   return name_;
 }
 
 
-bool detect::IDetector::Start()
+bool IDetector::Start(const cv::Mat frame)
 {
   try
   {
-    std::vector<cv::Rect> rects_find = Detect(frame_);
+    std::vector<cv::Rect> rects_find = Detect(frame);
     if (rects_find.size() > 0) {
       LOG_INFO << name_ << " find count: " << rects_find.size();
       emit signalFind(this, rects_find);

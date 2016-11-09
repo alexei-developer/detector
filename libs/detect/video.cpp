@@ -81,7 +81,7 @@ void detect::VideoCapture::Capture()
     for (IDetector* observer : observers_)
       observer->NewFrame(frame);
 
-    writer.Write(frame);
+    writer.NewFrame(frame);
   }
 
   LOG_INFO << "Stop capture";

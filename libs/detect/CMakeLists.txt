@@ -21,7 +21,10 @@ find_package(Qt5Core REQUIRED)
 add_library(detect STATIC
   detect.h detect.cpp
   video.h video.cpp
-  videowriter.h videowriter.cpp
+  videowriter.h
+  videowriter.cpp
+  newframethread.h
+  newframethread.cpp
   detectors/idetector.h
   detectors/idetector.cpp
   detectors/detectorface.h

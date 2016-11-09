@@ -1,11 +1,9 @@
 #ifndef IOBSERVER_H
 #define IOBSERVER_H
 
-#include <thread>
-#include <future>
-
 #include <QObject>
-#include <opencv2/core.hpp>
+
+#include "detect/newframethread.h"
 
 
 namespace detect {
@@ -13,15 +11,12 @@ namespace detect {
   /**
    * @brief The IObserver is observer pattern for find specify object
    */
-  class IDetector : public QObject
+  class IDetector : public QObject, public NewFrameThread
   {
       Q_OBJECT
 
     public:
       IDetector(const std::string& name, QObject* parent = 0);
-      virtual ~IDetector();
-
-      void NewFrame(const cv::Mat& frame);
       std::string Name() const;
 
     protected:
@@ -29,13 +24,9 @@ namespace detect {
 
     private:
       const std::string name_;
-      std::future<bool> work_result_;
-      cv::Mat frame_;
-
-      bool Start();
+      bool Start(const cv::Mat frame);
 
     signals:
-
       void signalFind(const IDetector* detector, const std::vector<cv::Rect> rectangles);
       void signalLose(const IDetector* detector);
   };

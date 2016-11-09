@@ -10,6 +10,7 @@
 #include <opencv2/opencv.hpp>
 
 #include "detectors/idetector.h"
+#include "newframethread.h"
 
 
 namespace detect {
@@ -41,7 +42,7 @@ namespace detect {
   /**
    * @brief VideoWriter write video for if find object
    */
-  class VideoWriter : public QObject
+  class VideoWriter : public QObject, public NewFrameThread
   {
       Q_OBJECT
 
@@ -51,7 +52,7 @@ namespace detect {
                            const int& height,
                            std::vector<IDetector*> detectors,
                            QObject* parent = 0);
-      void Write(const cv::Mat& frame);
+      bool Start(const cv::Mat frame);
 
     private:
       const std::string path_file_;
