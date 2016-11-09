@@ -15,10 +15,14 @@ class DetectorApplication : public QCoreApplication
     ~DetectorApplication();
 
     QString SourceCapture() const;
-
+    bool DetectorFace() const { return detectorFace_; }
+    bool DetectorMotion() const { return detectorMotion_; }
 
   private:
     QString sourceCapture_;
+    bool detectorMotion_;
+    bool detectorFace_;
+
     std::thread threadWaitExitKey_;
 
     static void WaitExitKey(int sig);

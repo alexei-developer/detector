@@ -20,15 +20,25 @@ DetectorApplication::DetectorApplication(int& argc, char** argv) :
   parser.addHelpOption();
 
   parser.addPositionalArgument("source", QCoreApplication::translate("main", "Source for video capture."));
+
+  QCommandLineOption detectorMotion("m", QCoreApplication::translate("main", "Detect any motion"));
+  parser.addOption(detectorMotion);
+
+  QCommandLineOption detectorFace("f", QCoreApplication::translate("main", "Detect faces"));
+  parser.addOption(detectorFace);
+
   parser.process(*this);
+
 
   const QStringList sources = parser.positionalArguments();
   if (sources.size() != 1) {
     LOG_ERROR << "Need one source for video capture";
     parser.showHelp(1);
   }
-
   sourceCapture_ = sources.first();
+
+  detectorMotion_ = parser.isSet(detectorMotion);
+  detectorFace_   = parser.isSet(detectorFace);
 
   signal(SIGINT,  WaitExitKey);
   signal(SIGTERM, WaitExitKey);

@@ -8,7 +8,9 @@ using namespace detect;
 
 IDetector::IDetector(const std::string& name, QObject* parent) :
   QObject(parent), NewFrameThread(), name_(name)
-{ }
+{
+  LOG_INFO << "Create detector: " << name_;
+}
 
 
 std::string IDetector::Name() const

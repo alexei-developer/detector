@@ -4,20 +4,17 @@
 #include <QtCore>
 
 #include "detect/video.h"
-#include "detect/detectors/detectorface.h"
-#include "detect/detectors/detectormotion.h"
+
 
 class Detector
 {
   public:
-    Detector(const QString& url);
+    Detector(const QString& url, const bool& detectMotion, const bool& detectFace);
     bool Start();
 
   private:
-    detect::DetectorFace detectorFace;
-    detect::DetectorMotion detectorMotion;
-
-    std::shared_ptr<detect::VideoCapture> video;
+    std::list< std::shared_ptr<detect::IDetector> > detectors_;
+    std::shared_ptr<detect::VideoCapture> video_;
 };
 
 #endif // DETECTOR_H

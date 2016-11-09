@@ -4,21 +4,28 @@
 #include "core/core.h"
 #include "detect/video.h"
 #include "detect/detectors/detectorface.h"
+#include "detect/detectors/detectormotion.h"
 
+using namespace detect;
 
-Detector::Detector(const QString& url) :
-  detectorMotion(0.1)
+Detector::Detector(const QString& url, const bool& detectMotion, const bool& detectFace)
 {
   try {
+    if (detectMotion)
+      detectors_.push_back(std::make_shared<DetectorMotion>(0.1));
+    if (detectFace)
+      detectors_.push_back(std::make_shared<DetectorFace>());
+
     bool is_device = false;
     int device = url.toInt(&is_device);
 
     if (is_device)
-      video = std::make_shared<detect::VideoCapture>(device);
+      video_ = std::make_shared<detect::VideoCapture>(device);
     else
-      video = std::make_shared<detect::VideoCapture>(url.toStdString());
+      video_ = std::make_shared<detect::VideoCapture>(url.toStdString());
 
-    video->AddDetector(&detectorMotion);
+    for (std::shared_ptr<IDetector> detector : detectors_)
+      video_->AddDetector(detector.get());
   }
   catch (const std::exception& e) {
     LOG_CRITICAL << "Error: " << e.what();
@@ -33,5 +40,5 @@ Detector::Detector(const QString& url) :
 
 bool Detector::Start()
 {
-  return video->Start();
+  return video_->Start();
 }
