@@ -1,5 +1,7 @@
 #include <algorithm>
 
+#include <QDir>
+
 #include "videowriter.h"
 #include "core/core.h"
 
@@ -94,16 +96,19 @@ const int WRITE_AFTER = 125; // 5 seconds
 
 
 VideoWriter::VideoWriter(const std::string& path_file,
-                         const int& width, const int& height,
-                         std::vector<IDetector*> detectors,
+                         std::list< std::shared_ptr<IDetector> > detectors,
                          QObject *parent) :
-  path_file_(path_file), width_(width), height_(height), QObject(parent)
+  path_file_(path_file), QObject(parent)
 {
-  for(IDetector* detector : detectors) {
-    connect(detector, SIGNAL(signalFind(const IDetector*,std::vector<cv::Rect>)),
+  if (path_file_.empty())
+    path_file_ = QDir::currentPath().toStdString();
+  LOG_INFO << "Write video to: " << path_file_;
+
+  for(std::shared_ptr<IDetector> detector : detectors) {
+    connect(detector.get(), SIGNAL(signalFind(const IDetector*,std::vector<cv::Rect>)),
             this,     SLOT(slotFind(const IDetector*,std::vector<cv::Rect>)),
             Qt::DirectConnection);
-    connect(detector, SIGNAL(signalLose(const IDetector*)),
+    connect(detector.get(), SIGNAL(signalLose(const IDetector*)),
             this,     SLOT(slotLose(const IDetector*)),
             Qt::DirectConnection);
   }
@@ -148,6 +153,13 @@ bool VideoWriter::Start(const cv::Mat frame)
 
   video_writer_->write(frame_with_rects);
   return true;
+}
+
+
+void VideoWriter::SetSize(const int& width, const int& height)
+{
+  width_  = width;
+  height_ = height;
 }
 
 

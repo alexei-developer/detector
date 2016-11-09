@@ -15,11 +15,13 @@ class DetectorApplication : public QCoreApplication
     ~DetectorApplication();
 
     QString SourceCapture() const;
-    bool DetectorFace() const { return detectorFace_; }
-    bool DetectorMotion() const { return detectorMotion_; }
+    QString pathSave() const;
+    bool DetectorMotion() const;
+    bool DetectorFace() const;
 
   private:
     QString sourceCapture_;
+    QString pathSave_;
     bool detectorMotion_;
     bool detectorFace_;
 

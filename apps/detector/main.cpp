@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 {
   DetectorApplication app(argc, argv);
 
-  Detector detector(app.SourceCapture(), app.DetectorMotion(), app.DetectorFace());
+  Detector detector(app.SourceCapture(), app.pathSave(), app.DetectorMotion(), app.DetectorFace());
   detector.Start();
 
   LOG_INFO << "Successfull start";

@@ -27,6 +27,9 @@ DetectorApplication::DetectorApplication(int& argc, char** argv) :
   QCommandLineOption detectorFace("f", QCoreApplication::translate("main", "Detect faces"));
   parser.addOption(detectorFace);
 
+  QCommandLineOption pathSave("p", QCoreApplication::translate("main", "Path for save video files"), "path");
+  parser.addOption(pathSave);
+
   parser.process(*this);
 
 
@@ -39,6 +42,8 @@ DetectorApplication::DetectorApplication(int& argc, char** argv) :
 
   detectorMotion_ = parser.isSet(detectorMotion);
   detectorFace_   = parser.isSet(detectorFace);
+
+  pathSave_ = parser.value(pathSave);
 
   signal(SIGINT,  WaitExitKey);
   signal(SIGTERM, WaitExitKey);
@@ -55,6 +60,24 @@ DetectorApplication::~DetectorApplication()
 QString DetectorApplication::SourceCapture() const
 {
   return sourceCapture_;
+}
+
+
+QString DetectorApplication::pathSave() const
+{
+  return pathSave_;
+}
+
+
+bool DetectorApplication::DetectorMotion() const
+{
+  return detectorMotion_;
+}
+
+
+bool DetectorApplication::DetectorFace() const
+{
+  return detectorFace_;
 }
 
 

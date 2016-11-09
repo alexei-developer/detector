@@ -48,16 +48,15 @@ namespace detect {
 
     public:
       explicit VideoWriter(const std::string& path_file,
-                           const int& width,
-                           const int& height,
-                           std::vector<IDetector*> detectors,
+                           std::list< std::shared_ptr<IDetector> > detectors,
                            QObject* parent = 0);
       bool Start(const cv::Mat frame);
+      void SetSize(const int& width, const int& height);
 
     private:
-      const std::string path_file_;
-      const int width_;
-      const int height_;
+      std::string path_file_;
+      int width_ {0};
+      int height_ {0};
 
       std::mutex mutex_write_;
       std::unique_ptr<cv::VideoWriter> video_writer_;

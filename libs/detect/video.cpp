@@ -1,11 +1,10 @@
 #include "video.h"
 #include "core/core.h"
-#include "videowriter.h"
 
 
 detect::VideoCapture::VideoCapture(const std::string& url)
 {
-  LOG_DEBUG << "Set IP device";
+  LOG_DEBUG << "Set IP device: " << url;
   if (!video_.open(url))
     throw std::runtime_error("Can not set IP device");
 }
@@ -13,7 +12,7 @@ detect::VideoCapture::VideoCapture(const std::string& url)
 
 detect::VideoCapture::VideoCapture(const int& usb_device)
 {
-  LOG_DEBUG << "Set usb device";
+  LOG_DEBUG << "Set usb device: " << usb_device;
   if (!video_.open(usb_device))
     throw std::runtime_error("Can not set usb device");
 }
@@ -63,12 +62,18 @@ void detect::VideoCapture::AddDetector(IDetector* observer)
 }
 
 
+void detect::VideoCapture::SetWriter(std::shared_ptr<detect::VideoWriter> writer)
+{
+  writer_ = writer;
+  writer_->SetSize(
+        video_.get(CV_CAP_PROP_FRAME_WIDTH),
+        video_.get(CV_CAP_PROP_FRAME_HEIGHT)
+        );
+}
+
+
 void detect::VideoCapture::Capture()
 {
-  const int frame_width  =   video_.get(CV_CAP_PROP_FRAME_WIDTH);
-  const int frame_height =   video_.get(CV_CAP_PROP_FRAME_HEIGHT);
-  VideoWriter writer("/tmp", frame_width, frame_height, observers_);
-
   LOG_INFO << "Start capture";
   cv::Mat frame;
 
@@ -81,7 +86,8 @@ void detect::VideoCapture::Capture()
     for (IDetector* observer : observers_)
       observer->NewFrame(frame);
 
-    writer.NewFrame(frame);
+    if (writer_)
+      writer_->NewFrame(frame);
   }
 
   LOG_INFO << "Stop capture";
