@@ -1,6 +1,7 @@
 language: cpp
 compiler: gcc
 dist: trusty
+sudo: required
 install:
  - sudo apt-get update -qq
  - sudo apt-get install qtbase5-dev qtdeclarative5-dev libqt5webkit5-dev libsqlite3-dev
@@ -9,6 +10,6 @@ install:
 script:
   - mkdir build
   - cd build
-  - cmake ../3rd/ && make && make install
+  - cmake ../3rd/ && make && sudo make install
   - cmake .. && make
 
