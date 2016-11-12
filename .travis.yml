@@ -8,5 +8,6 @@ install:
 script:
   - mkdir build
   - cd build
+  - cmake ../3rd/ && make && make install
   - cmake .. && make
 
