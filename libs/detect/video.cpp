@@ -65,13 +65,6 @@ void detect::VideoCapture::AddDetector(IDetector* observer)
 void detect::VideoCapture::SetWriter(std::shared_ptr<detect::VideoWriter> writer)
 {
   writer_ = writer;
-  writer_->SetSize(
-        video_.get(CV_CAP_PROP_FRAME_WIDTH),
-        video_.get(CV_CAP_PROP_FRAME_HEIGHT)
-        );
-  writer_->SetFps(
-        video_.get(CV_CAP_PROP_FPS)
-        );
 }
 
 
@@ -89,8 +82,16 @@ void detect::VideoCapture::Capture()
     for (IDetector* observer : observers_)
       observer->NewFrame(frame);
 
-    if (writer_)
+    if (writer_) {
+      writer_->SetSize(
+            video_.get(CV_CAP_PROP_FRAME_WIDTH),
+            video_.get(CV_CAP_PROP_FRAME_HEIGHT)
+            );
+      writer_->SetFps(
+            video_.get(CV_CAP_PROP_FPS)
+            );
       writer_->NewFrame(frame);
+    }
   }
 
   LOG_INFO << "Stop capture";

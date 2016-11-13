@@ -158,6 +158,7 @@ bool VideoWriter::Start(const cv::Mat frame)
 
 void VideoWriter::SetSize(const int& width, const int& height)
 {
+  std::lock_guard<std::mutex> lock(mutex_write_);
   width_  = width;
   height_ = height;
 
@@ -167,6 +168,7 @@ void VideoWriter::SetSize(const int& width, const int& height)
 
 void VideoWriter::SetFps(const int& fps)
 {
+  std::lock_guard<std::mutex> lock(mutex_write_);
   fps_ = fps;
   LOG_INFO << "Video write fps: " << fps_;
 }
