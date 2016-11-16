@@ -7,3 +7,6 @@
 [submodule "3rd/motion"]
 	path = 3rd/motion
 	url = https://github.com/Motion-Project/motion.git
+[submodule "3rd/darknet"]
+	path = 3rd/darknet
+	url = https://github.com/pjreddie/darknet.git
