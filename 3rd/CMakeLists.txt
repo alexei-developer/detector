@@ -22,6 +22,11 @@ endmacro()
 patch_3rd(opencv opencv-cmake_install_prefix.patch)
 patch_3rd(opencv_contrib opencv_contrib-cmake_install_prefix.patch)
 
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/patch/darknet-CMakeLists.txt
+     DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/darknet/)
+file(RENAME ${CMAKE_CURRENT_SOURCE_DIR}/darknet/darknet-CMakeLists.txt
+            ${CMAKE_CURRENT_SOURCE_DIR}/darknet/CMakeLists.txt)
+
 
 # OpenCV
 set(WITH_QT          ON  CACHE BOOL "Build with Qt Backend support")
@@ -73,6 +78,11 @@ set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
     /usr/lib/python3.5/site-packages
     /usr/lib/python2.7
     /usr/lib/python2.7/site-packages)
+
+
+# Darknet YOLO
+add_subdirectory(darknet)
+
 
 if(EXISTS /etc/debian_version)
     set(CPACK_GENERATOR "DEB")
