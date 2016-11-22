@@ -1,0 +1,14 @@
+diff --git a/src/darknet.c b/src/darknet.c
+index 1444756..3a3a6a3 100644
+--- a/src/darknet.c
++++ b/src/darknet.c
+@@ -9,6 +9,9 @@
+ #include "connected_layer.h"
+ 
+ #ifdef OPENCV
++int cvRound( int value ) {
++    return value;
++}
+ #include "opencv2/highgui/highgui_c.h"
+ #endif
+ 

@@ -26,6 +26,7 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/patch/darknet-CMakeLists.txt
      DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/darknet/)
 file(RENAME ${CMAKE_CURRENT_SOURCE_DIR}/darknet/darknet-CMakeLists.txt
             ${CMAKE_CURRENT_SOURCE_DIR}/darknet/CMakeLists.txt)
+patch_3rd(darknet darknet-opencv3_c_compile.patch)
 
 
 # OpenCV

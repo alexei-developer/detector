@@ -26,6 +26,8 @@ endif()
 
 if (DARKNET_OPENCV)
     add_definitions(-DOPENCV=1)
+    set(OPENCV_LIBS   opencv_core opencv_highgui opencv_imgproc
+        opencv_videoio opencv_objdetect opencv_imgcodecs)
 endif()
 
 if (DARKNET_CUDNN)
@@ -34,7 +36,7 @@ if (DARKNET_CUDNN)
 endif()
 
 
-add_executable(${PROJECT_NAME}
+add_library(${PROJECT_NAME}_core SHARED
     src/gemm.c
     src/utils.c
     src/cuda.c
@@ -56,7 +58,6 @@ add_executable(${PROJECT_NAME}
     src/cost_layer.c
     src/parser.c
     src/option_list.c
-    src/darknet.c
     src/detection_layer.c
     src/captcha.c
     src/route_layer.c
@@ -93,7 +94,10 @@ add_executable(${PROJECT_NAME}
     src/voxel.c
     src/tree.c
     ${GPU_SRC})
+target_link_libraries(${PROJECT_NAME}_core m pthread ${GPU_LIBS} ${OPENCV_LIBS} ${CUDNN_LIBS})
 
-target_link_libraries(${PROJECT_NAME} m pthread ${GPU_LIBS} ${CUDNN_LIBS})
+add_executable(${PROJECT_NAME}  src/darknet.c)
+target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}_core)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+install(TARGETS ${PROJECT_NAME}_core DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
