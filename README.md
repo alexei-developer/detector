@@ -1,8 +1,5 @@
-### Detector compiter vision
-
-master: ![master](https://travis-ci.org/alexei-developer/detector.svg?branch=master)
-
-develop: ![develop](https://travis-ci.org/alexei-developer/detector.svg?branch=develop)
+### Detector computer vision
+![master](https://travis-ci.org/alexei-developer/detector.svg?branch=master)
 
 
 #### Available
