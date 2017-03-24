@@ -9,7 +9,6 @@ install:
  - sudo apt-get install libavutil-dev libavformat-dev libavcodec-dev libswscale-dev
 script:
   - qmake --version
-  - qmake-qt5 --version
   - mkdir build_3rd
   - cd build_3rd
   - cmake ../3rd/ && make && sudo make install
