@@ -7,7 +7,7 @@
 #include <opencv2/core.hpp>
 
 
-namespace detect {
+namespace detector {
 
   class NewFrameThread
   {

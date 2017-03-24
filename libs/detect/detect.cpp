@@ -13,12 +13,12 @@
 
 const std::string FIND_FILENAME_POSTFIX = "_find";
 
-detect::DetectNotFound::DetectNotFound(const std::string& message) :
+detector::DetectNotFound::DetectNotFound(const std::string& message) :
   message_(message)
 { }
 
 
-const char* detect::DetectNotFound::what() const throw()
+const char* detector::DetectNotFound::what() const throw()
 {
   return message_.c_str();
 }
@@ -43,7 +43,7 @@ std::string DetectSaveImage(const cv::Mat& image, const std::string& path_image)
 }
 
 
-std::string detect::DetectPedestrian(const std::string& path_image) {
+std::string detector::DetectPedestrian(const std::string& path_image) {
   cv::Mat image = cv::imread(path_image);
 
   cv::Mat frame_gray;

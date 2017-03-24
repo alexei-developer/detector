@@ -1,8 +1,10 @@
-#include <signal.h>
+﻿#include <signal.h>
 
 #include "detectorapplication.h"
+#include "constant.h"
 #include "core/core.h"
 
+using namespace detector;
 
 DetectorApplication::DetectorApplication(int& argc, char** argv) :
   QCoreApplication(argc, argv)
@@ -15,35 +17,23 @@ DetectorApplication::DetectorApplication(int& argc, char** argv) :
 
   LOG_DEBUG << "Arguments:" << arguments().join(" ").toStdString();
 
-  QCommandLineParser parser;
-  parser.addVersionOption();
-  parser.addHelpOption();
+  QSettings settings("setting.ini", QSettings::IniFormat);
 
-  parser.addPositionalArgument("source", QCoreApplication::translate("main", "Source for video capture."));
+  // General
+  pathSave_ = settings.value("path_save", "").toString();
 
-  QCommandLineOption detectorMotion("m", QCoreApplication::translate("main", "Detect any motion"));
-  parser.addOption(detectorMotion);
-
-  QCommandLineOption detectorFace("f", QCoreApplication::translate("main", "Detect faces"));
-  parser.addOption(detectorFace);
-
-  QCommandLineOption pathSave("p", QCoreApplication::translate("main", "Path for save video files"), "path");
-  parser.addOption(pathSave);
-
-  parser.process(*this);
-
-
-  const QStringList sources = parser.positionalArguments();
-  if (sources.size() != 1) {
-    LOG_ERROR << "Need one source for video capture";
-    parser.showHelp(1);
+  // Cams
+  settings.beginGroup("Cams");
+  for(int i = 0; i < kMaxCam; ++i) {
+    source_captures[i] = settings.value("source_" + QString::number(i), "").toString();
   }
-  sourceCapture_ = sources.first();
+  settings.endGroup();
 
-  detectorMotion_ = parser.isSet(detectorMotion);
-  detectorFace_   = parser.isSet(detectorFace);
-
-  pathSave_ = parser.value(pathSave);
+  // Detectors
+  settings.beginGroup("Detectors");
+  detectorMotion_ = settings.value("motion", false).toBool();
+  detectorFace_   = settings.value("face", false).toBool();
+  settings.endGroup();
 
   signal(SIGINT,  WaitExitKey);
   signal(SIGTERM, WaitExitKey);
@@ -57,9 +47,9 @@ DetectorApplication::~DetectorApplication()
 }
 
 
-QString DetectorApplication::SourceCapture() const
+SourceCaptureArray DetectorApplication::SourceCapture() const
 {
-  return sourceCapture_;
+  return source_captures;
 }
 
 

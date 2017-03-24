@@ -1,4 +1,4 @@
-#include "detector.h"
+﻿#include "detector.h"
 
 #include "config.h"
 #include "core/core.h"
@@ -6,33 +6,44 @@
 #include "detect/detectors/detectorface.h"
 #include "detect/detectors/detectormotion.h"
 
-using namespace detect;
+using namespace detector;
 
-Detector::Detector(const QString& url, const QString& pathSave,
+Detector::Detector(SourceCaptureArray capture_array, const QString& pathSave,
                    const bool& detectMotion, const bool& detectFace)
 {
   try {
+    // Detectors
+    std::list< std::shared_ptr<IDetector> > detectors;
+    if (detectMotion)
+      detectors.push_back(std::make_shared<DetectorMotion>(0.1));
+
+    if (detectFace)
+      detectors.push_back(std::make_shared<DetectorFace>());
 
     // VideoCapture
-    bool is_device = false;
-    int device = url.toInt(&is_device);
+    for(int i_cam = 0; i_cam < kMaxCam; ++i_cam) {
+      if (capture_array[i_cam].isEmpty())
+        continue;
 
-    if (is_device)
-      video_ = std::make_shared<detect::VideoCapture>(device);
-    else
-      video_ = std::make_shared<detect::VideoCapture>(url.toStdString());
+      // Create dir if not exists
+      const QString path_save_each_cam = pathSave + "/cam_" + QString::number(i_cam);
+      QDir dir_eac_cam(path_save_each_cam);
+      if ( ! dir_eac_cam.exists())
+        dir_eac_cam.mkpath(path_save_each_cam);
 
-    // Detectors
-    if (detectMotion)
-      detectors_.push_back(std::make_shared<DetectorMotion>(0.1));
-    if (detectFace)
-      detectors_.push_back(std::make_shared<DetectorFace>());
-    for (std::shared_ptr<IDetector> detector : detectors_)
-      video_->AddDetector(detector.get());
+      // Auto choose usb or url device
+      bool is_device = false;
+      int device = capture_array[i_cam].toInt(&is_device);
 
-    // VideoWriter
-    writer_ = std::make_shared<VideoWriter>(pathSave.toStdString(), detectors_);
-    video_->SetWriter(writer_);
+      if (is_device)
+        video_captures_[i_cam] = std::make_shared<detector::VideoCapture>(device,
+                                                                          detectors,
+                                                                          path_save_each_cam.toStdString());
+      else
+        video_captures_[i_cam] = std::make_shared<detector::VideoCapture>(capture_array[i_cam].toStdString(),
+                                                                 detectors,
+                                                                 path_save_each_cam.toStdString());
+    }
   }
   catch (const std::exception& e) {
     LOG_CRITICAL << "Error: " << e.what();
@@ -47,5 +58,11 @@ Detector::Detector(const QString& url, const QString& pathSave,
 
 bool Detector::Start()
 {
-  return video_->Start();
+  bool start_all_successfull = true;
+  for(std::pair<int, std::shared_ptr<VideoCapture>> video_capture : video_captures_) {
+    if ( ! video_capture.second->Start())
+      start_all_successfull = false;
+  }
+
+  return start_all_successfull;
 }

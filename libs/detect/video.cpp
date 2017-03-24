@@ -2,30 +2,46 @@
 #include "core/core.h"
 
 
-detect::VideoCapture::VideoCapture(const std::string& url)
+detector::VideoCapture::VideoCapture(const std::string& url,
+                                     const std::list< std::shared_ptr<IDetector> >& detectors,
+                                     const std::string path_save)
 {
+  for(std::shared_ptr<IDetector> detector: detectors) {
+    LOG_INFO << "Add detector: " << detector->Name();
+    observers_.push_back(detector);
+  }
+
   LOG_DEBUG << "Set IP device: " << url;
   if (!video_.open(url))
     throw std::runtime_error("Can not set IP device");
+
+  writer_ = std::make_shared<VideoWriter>(path_save, detectors);
 }
 
 
-detect::VideoCapture::VideoCapture(const int& usb_device)
+detector::VideoCapture::VideoCapture(const int& usb_device, const std::list< std::shared_ptr<IDetector> >& detectors, const std::__cxx11::string path_save)
 {
+  for(std::shared_ptr<IDetector> detector: detectors) {
+    LOG_INFO << "Add detector: " << detector->Name();
+    observers_.push_back(detector);
+  }
+
   LOG_DEBUG << "Set usb device: " << usb_device;
   if (!video_.open(usb_device))
     throw std::runtime_error("Can not set usb device");
+
+  writer_ = std::make_shared<VideoWriter>(path_save, detectors);
 }
 
 
-detect::VideoCapture::~VideoCapture()
+detector::VideoCapture::~VideoCapture()
 {
   Stop();
   work_.join();
 }
 
 
-bool detect::VideoCapture::Start()
+bool detector::VideoCapture::Start()
 {
   try {
     LOG_INFO << "Start video surveliance...";
@@ -48,27 +64,14 @@ bool detect::VideoCapture::Start()
 }
 
 
-bool detect::VideoCapture::Stop()
+bool detector::VideoCapture::Stop()
 {
   LOG_INFO << "Request for stop video surveliance";
   flag_stop_ = true;
 }
 
 
-void detect::VideoCapture::AddDetector(IDetector* observer)
-{
-  LOG_INFO << "Add detector: " << observer->Name();
-  observers_.push_back(observer);
-}
-
-
-void detect::VideoCapture::SetWriter(std::shared_ptr<detect::VideoWriter> writer)
-{
-  writer_ = writer;
-}
-
-
-void detect::VideoCapture::Capture()
+void detector::VideoCapture::Capture()
 {
   LOG_INFO << "Start capture";
   cv::Mat frame;
@@ -79,7 +82,9 @@ void detect::VideoCapture::Capture()
     if(frame.empty())
       throw std::runtime_error("Can not read frame");
 
-    for (IDetector* observer : observers_)
+    cv::putText(frame, "Senaz", cv::Point(100, 100), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, cv::Scalar(200,200,250));
+
+    for (std::shared_ptr<IDetector> observer : observers_)
       observer->NewFrame(frame);
 
     if (writer_) {

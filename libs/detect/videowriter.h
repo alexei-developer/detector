@@ -13,7 +13,7 @@
 #include "newframethread.h"
 
 
-namespace detect {
+namespace detector {
 
   struct Data {
       const IDetector* detector;

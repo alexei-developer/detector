@@ -12,7 +12,7 @@ cv::CascadeClassifier face_cascade;
 cv::CascadeClassifier eyes_cascade;
 
 
-detect::DetectorFace::DetectorFace() :
+detector::DetectorFace::DetectorFace() :
   IDetector("Face")
 {
   if (!face_cascade.load(FACE_CASCADE_NAME))
@@ -23,7 +23,7 @@ detect::DetectorFace::DetectorFace() :
 }
 
 
-std::vector<cv::Rect> detect::DetectorFace::Detect(const cv::Mat& frame)
+std::vector<cv::Rect> detector::DetectorFace::Detect(const cv::Mat& frame)
 {
   std::vector<cv::Rect> faces;
   cv::Mat frame_gray;

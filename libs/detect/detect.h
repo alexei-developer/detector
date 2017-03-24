@@ -1,7 +1,7 @@
 #include <string>
 #include <exception>
 
-namespace detect {
+namespace detector {
 
   class DetectNotFound : public std::exception
   {

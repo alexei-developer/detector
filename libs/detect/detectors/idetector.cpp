@@ -3,7 +3,7 @@
 #include "detectors/idetector.h"
 
 
-using namespace detect;
+using namespace detector;
 
 
 IDetector::IDetector(const std::string& name, QObject* parent) :

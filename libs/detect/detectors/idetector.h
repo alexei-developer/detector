@@ -6,7 +6,7 @@
 #include "detect/newframethread.h"
 
 
-namespace detect {
+namespace detector {
 
   /**
    * @brief The IObserver is observer pattern for find specify object

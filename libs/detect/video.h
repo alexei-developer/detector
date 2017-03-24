@@ -11,26 +11,23 @@
 #include "videowriter.h"
 
 
-namespace detect {
+namespace detector {
 
   class VideoCapture
   {
     public:
-      VideoCapture(const std::string& url);
-      VideoCapture(const int& usb_device);
+      VideoCapture(const std::string& url, const std::list< std::shared_ptr<IDetector> >& detectors, const std::string path_save);
+      VideoCapture(const int& usb_device, const std::list< std::shared_ptr<IDetector> >& detectors, const std::string path_save);
       ~VideoCapture();
 
       bool Start();
       bool Stop();
 
-      void AddDetector(IDetector* observer);
-      void SetWriter(std::shared_ptr<VideoWriter> writer);
-
     private:
       cv::VideoCapture video_;
       std::thread work_;
       std::atomic_bool flag_stop_ {false};
-      std::vector<IDetector*> observers_;
+      std::vector<std::shared_ptr<IDetector>> observers_;
       std::shared_ptr<VideoWriter> writer_;
 
       void Capture();

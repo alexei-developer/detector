@@ -1,34 +1,38 @@
-#ifndef DETECTORAPPLICATION_H
+﻿#ifndef DETECTORAPPLICATION_H
 #define DETECTORAPPLICATION_H
 
 #include <thread>
-
 #include <QtCore>
 
+#include "constant.h"
 
-class DetectorApplication : public QCoreApplication
-{
-    Q_OBJECT
 
-  public:
-    DetectorApplication(int &argc, char **argv);
-    ~DetectorApplication();
+namespace detector {
 
-    QString SourceCapture() const;
-    QString pathSave() const;
-    bool DetectorMotion() const;
-    bool DetectorFace() const;
+  class DetectorApplication : public QCoreApplication
+  {
+      Q_OBJECT
 
-  private:
-    QString sourceCapture_;
-    QString pathSave_;
-    bool detectorMotion_;
-    bool detectorFace_;
+    public:
+      DetectorApplication(int &argc, char **argv);
+      ~DetectorApplication();
 
-    std::thread threadWaitExitKey_;
+      SourceCaptureArray SourceCapture() const;
+      QString pathSave() const;
+      bool DetectorMotion() const;
+      bool DetectorFace() const;
 
-    static void WaitExitKey(int sig);
-};
+    private:
+      SourceCaptureArray source_captures;
+      QString pathSave_;
+      bool detectorMotion_;
+      bool detectorFace_;
 
+      std::thread threadWaitExitKey_;
+
+      static void WaitExitKey(int sig);
+  };
+
+}
 
 #endif // DETECTORAPPLICATION_H

@@ -1,6 +1,6 @@
 #include "newframethread.h"
 
-using namespace detect;
+using namespace detector;
 
 
 NewFrameThread::NewFrameThread()

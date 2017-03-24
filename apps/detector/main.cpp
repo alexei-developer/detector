@@ -1,4 +1,4 @@
-#include <exception>
+﻿#include <exception>
 #include <iostream>
 #include <thread>
 
@@ -13,11 +13,11 @@
 
 int main(int argc, char *argv[])
 {
-  DetectorApplication app(argc, argv);
+  detector::DetectorApplication app(argc, argv);
 
-  Detector detector(app.SourceCapture(), app.pathSave(), app.DetectorMotion(), app.DetectorFace());
+  detector::Detector detector(app.SourceCapture(), app.pathSave(),
+                              app.DetectorMotion(), app.DetectorFace());
   detector.Start();
-
   LOG_INFO << "Successfull start";
 
   return app.exec();

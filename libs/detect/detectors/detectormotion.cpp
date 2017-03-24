@@ -5,7 +5,7 @@
 #include "core/core.h"
 
 
-using namespace detect;
+using namespace detector;
 
 
 DetectorMotion::DetectorMotion(const double& percent) :

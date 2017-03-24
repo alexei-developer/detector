@@ -6,7 +6,7 @@
 #include "core/core.h"
 
 
-using namespace detect;
+using namespace detector;
 
 
 // === Data ===

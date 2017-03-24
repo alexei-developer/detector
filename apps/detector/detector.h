@@ -1,22 +1,25 @@
-#ifndef DETECTOR_H
+﻿#ifndef DETECTOR_H
 #define DETECTOR_H
 
 #include <QtCore>
 
+#include "constant.h"
 #include "detect/video.h"
 
 
-class Detector
-{
-  public:
-    Detector(const QString& url,const QString& pathSave = "",
-             const bool& detectMotion = false, const bool& detectFace = false);
-    bool Start();
+namespace detector {
 
-  private:
-    std::list< std::shared_ptr<detect::IDetector> > detectors_;
-    std::shared_ptr<detect::VideoCapture> video_;
-    std::shared_ptr<detect::VideoWriter> writer_;
-};
+  class Detector
+  {
+    public:
+      Detector(SourceCaptureArray capture_array, const QString& pathSave = "",
+               const bool& detectMotion = false, const bool& detectFace = false);
+      bool Start();
+
+    private:
+      std::map<int, std::shared_ptr<VideoCapture>> video_captures_;
+  };
+
+}
 
 #endif // DETECTOR_H

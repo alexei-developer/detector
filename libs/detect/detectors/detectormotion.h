@@ -4,7 +4,7 @@
 #include "detect/detectors/idetector.h"
 
 
-namespace detect {
+namespace detector {
 
   class DetectorMotion: public IDetector
   {

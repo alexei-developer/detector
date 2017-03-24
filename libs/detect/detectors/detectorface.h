@@ -1,4 +1,4 @@
-#ifndef DETECTORFACE_H
+﻿#ifndef DETECTORFACE_H
 #define DETECTORFACE_H
 
 #include <opencv2/objdetect.hpp>
@@ -6,7 +6,7 @@
 #include "detect/detectors/idetector.h"
 
 
-namespace detect {
+namespace detector {
 
   class DetectorFace : public IDetector
   {
