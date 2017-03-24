@@ -21,7 +21,7 @@ detector::VideoCapture::VideoCapture(const std::string& url,
 }
 
 
-detector::VideoCapture::VideoCapture(const int& usb_device, const std::list< std::shared_ptr<IDetector> >& detectors, const std::__cxx11::string path_save)
+detector::VideoCapture::VideoCapture(const int& usb_device, const std::list< std::shared_ptr<IDetector> >& detectors, const std::string path_save)
 {
   for(std::shared_ptr<IDetector> detector: detectors) {
     LOG_INFO << "Add detector: " << detector->Name();
