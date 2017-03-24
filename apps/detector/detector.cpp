@@ -1,4 +1,6 @@
-﻿#include "detector.h"
+#include <QSettings>
+
+#include "detector.h"
 
 #include "config.h"
 #include "core/core.h"
@@ -8,42 +10,59 @@
 
 using namespace detector;
 
-Detector::Detector(SourceCaptureArray capture_array, const QString& pathSave,
-                   const bool& detectMotion, const bool& detectFace)
+Detector::Detector()
 {
+  QSettings settings("setting.ini", QSettings::IniFormat);
+
+  // General
+  const QString path_save = settings.value("path_save", "").toString();
+
   try {
     // Detectors
+    settings.beginGroup("Detectors");
+
     std::list< std::shared_ptr<IDetector> > detectors;
-    if (detectMotion)
+    if (settings.value("motion", false).toBool())
       detectors.push_back(std::make_shared<DetectorMotion>(0.1));
 
-    if (detectFace)
+    if (settings.value("face", false).toBool())
       detectors.push_back(std::make_shared<DetectorFace>());
+    settings.endGroup();
 
     // VideoCapture
-    for(int i_cam = 0; i_cam < kMaxCam; ++i_cam) {
-      if (capture_array[i_cam].isEmpty())
+    settings.beginGroup("Cams");
+    const int kMaxCam = 10;
+    for(int i_source = 0; i_source < kMaxCam; ++i_source) {
+      const QString source_capture = settings.value("source_" + QString::number(i_source), "").toString();
+
+      if (source_capture.isEmpty())
         continue;
 
       // Create dir if not exists
-      const QString path_save_each_cam = pathSave + "/cam_" + QString::number(i_cam);
+      const QString path_save_each_cam = path_save + "/cam_" + QString::number(i_source);
       QDir dir_eac_cam(path_save_each_cam);
       if ( ! dir_eac_cam.exists())
         dir_eac_cam.mkpath(path_save_each_cam);
 
       // Auto choose usb or url device
       bool is_device = false;
-      int device = capture_array[i_cam].toInt(&is_device);
+      int device = source_capture.toInt(&is_device);
 
       if (is_device)
-        video_captures_[i_cam] = std::make_shared<detector::VideoCapture>(device,
+        video_captures_[i_source] = std::make_shared<detector::VideoCapture>(device,
                                                                           detectors,
                                                                           path_save_each_cam.toStdString());
       else
-        video_captures_[i_cam] = std::make_shared<detector::VideoCapture>(capture_array[i_cam].toStdString(),
+        video_captures_[i_source] = std::make_shared<detector::VideoCapture>(source_capture.toStdString(),
                                                                  detectors,
                                                                  path_save_each_cam.toStdString());
+
+      const QString text_capture = settings.value("textfile_" + QString::number(i_source), "").toString();
+      if ( ! text_capture.isEmpty()) {
+        video_captures_[i_source]->SetTextFile(text_capture);
+      }
     }
+    settings.endGroup();
   }
   catch (const std::exception& e) {
     LOG_CRITICAL << "Error: " << e.what();

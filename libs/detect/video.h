@@ -23,12 +23,15 @@ namespace detector {
       bool Start();
       bool Stop();
 
+      void SetTextFile(const QString& path);
+
     private:
       cv::VideoCapture video_;
       std::thread work_;
       std::atomic_bool flag_stop_ {false};
       std::vector<std::shared_ptr<IDetector>> observers_;
       std::shared_ptr<VideoWriter> writer_;
+      QString path_text_file_;
 
       void Capture();
   };

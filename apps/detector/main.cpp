@@ -1,4 +1,4 @@
-﻿#include <exception>
+#include <exception>
 #include <iostream>
 #include <thread>
 
@@ -15,8 +15,7 @@ int main(int argc, char *argv[])
 {
   detector::DetectorApplication app(argc, argv);
 
-  detector::Detector detector(app.SourceCapture(), app.pathSave(),
-                              app.DetectorMotion(), app.DetectorFace());
+  detector::Detector detector;
   detector.Start();
   LOG_INFO << "Successfull start";
 

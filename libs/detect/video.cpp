@@ -1,3 +1,5 @@
+#include <QFile>
+
 #include "video.h"
 #include "core/core.h"
 
@@ -71,10 +73,17 @@ bool detector::VideoCapture::Stop()
 }
 
 
+void detector::VideoCapture::SetTextFile(const QString& path)
+{
+  path_text_file_ = path;
+}
+
+
 void detector::VideoCapture::Capture()
 {
   LOG_INFO << "Start capture";
   cv::Mat frame;
+  static std::string text_on_cam;
 
   while (!flag_stop_)
   {
@@ -82,7 +91,11 @@ void detector::VideoCapture::Capture()
     if(frame.empty())
       throw std::runtime_error("Can not read frame");
 
-    cv::putText(frame, "Senaz", cv::Point(100, 100), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, cv::Scalar(200,200,250));
+    QFile text_file(path_text_file_);
+    if (text_file.open(QFile::ReadOnly))
+      text_on_cam = text_file.readAll().toStdString();
+    cv::putText(frame, text_on_cam, cv::Point(100, 100),
+                cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(200,200,250), 2);
 
     for (std::shared_ptr<IDetector> observer : observers_)
       observer->NewFrame(frame);
