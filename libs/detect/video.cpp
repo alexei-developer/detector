@@ -93,7 +93,7 @@ void detector::VideoCapture::Capture()
 
     QFile text_file(path_text_file_);
     if (text_file.open(QFile::ReadOnly))
-      text_on_cam = text_file.readAll().toStdString();
+      text_on_cam = QString(text_file.readAll()).toStdString();
     cv::putText(frame, text_on_cam, cv::Point(100, 100),
                 cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(200,200,250), 2);
 
