@@ -1,13 +1,14 @@
 language: cpp
 compiler: gcc
-dist: xenial
+dist: trusty
 sudo: required
 install:
+ - cat /etc/os-release
  - sudo apt-get update -qq
  - sudo apt-get install qtbase5-dev qtdeclarative5-dev libqt5webkit5-dev libsqlite3-dev
  - sudo apt-get install qt5-default qttools5-dev-tools
  - sudo apt-get install libavutil-dev libavformat-dev libavcodec-dev libswscale-dev
- - sudo apt-get install libgstrtspserver-1.0-dev libgstreamer0.10-dev
+ - sudo apt-get install libgstreamer0.10-dev # libgstrtspserver-1.0-dev
 script:
   - qmake --version
   - mkdir build_3rd
