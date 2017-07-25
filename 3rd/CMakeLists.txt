@@ -19,15 +19,16 @@ macro(patch_3rd name name_patch)
     endif()
 endmacro()
 
+
+# OpenCV
 patch_3rd(opencv opencv-cmake_install_prefix.patch)
 patch_3rd(opencv_contrib opencv_contrib-cmake_install_prefix.patch)
 
-
-# OpenCV
 set(WITH_QT          ON  CACHE BOOL "Build with Qt Backend support")
 set(BUILD_PERF_TESTS OFF CACHE BOOL "Build performance tests")
 set(BUILD_TESTS      OFF CACHE BOOL "Build accuracy & regression tests")
-set(OPENCV_EXTRA_MODULES_PATH "${CMAKE_CURRENT_SOURCE_DIR}/opencv_contrib/modules")
+set(BUILD_opencv_dnn OFF CACHE BOOL "Error: Not find file in version 3.2")
+set(OPENCV_EXTRA_MODULES_PATH "${CMAKE_CURRENT_SOURCE_DIR}/opencv_contrib/modules" CACHE STRING "Contrib must have" FORCE)
 add_subdirectory(opencv)
 
 
